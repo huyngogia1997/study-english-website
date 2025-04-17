@@ -39,7 +39,7 @@ function createSpeechRecognitionUI() {
     // Create audio element
     const audioElement = document.createElement('audio');
     audioElement.id = 'speech-audio';
-    audioElement.controls = true;
+    audioElement.controls = false;
     audioElement.style.display = 'none';
     audioElement.className = 'speech-audio';
     
@@ -313,6 +313,12 @@ function startMediaRecording() {
             const audioElement = document.getElementById('speech-audio');
             if (audioElement) {
                 audioElement.src = audioUrl;
+                
+                // Auto-play the recording
+                console.log("Auto-playing recording");
+                audioElement.play().catch(error => {
+                    console.error("Error auto-playing audio:", error);
+                });
             }
             
             // Show replay button
@@ -396,16 +402,29 @@ function displayRecognizedWord(word) {
     if (foundWord) {
         recognizedWordElement.classList.add('word-found');
         recognizedWordElement.classList.remove('word-not-found');
+        
+        // Wait a moment before playing the dictionary pronunciation
+        // to allow the user's recording to play first
+        setTimeout(() => {
+            // Play the pronunciation if available
+            if (foundWord.value.uk && foundWord.value.uk.mp3) {
+                console.log("Playing UK pronunciation");
+                const audio = new Audio(foundWord.value.uk.mp3);
+                audio.play().catch(error => {
+                    console.error('Error playing audio:', error);
+                });
+            }
+        }, 1500); // Wait 1.5 seconds before playing dictionary pronunciation
     } else {
         recognizedWordElement.classList.add('word-not-found');
         recognizedWordElement.classList.remove('word-found');
     }
     
-    // Hide word after 2 seconds
+    // Hide word after 3 seconds (increased from 2 seconds to give more time to read)
     wordDisplayTimeout = setTimeout(() => {
         recognizedWordElement.textContent = '';
         recognizedWordElement.className = 'recognized-word';
-    }, 2000);
+    }, 3000);
 }
 
 // Search for the recognized word in our dictionary
@@ -432,16 +451,6 @@ function searchForRecognizedWord(word) {
     
     if (foundWord) {
         console.log("Word found in dictionary:", foundWord.value.word);
-        
-        // Play the pronunciation if available
-        if (foundWord.value.uk && foundWord.value.uk.mp3) {
-            console.log("Playing UK pronunciation");
-            const audio = new Audio(foundWord.value.uk.mp3);
-            audio.play().catch(error => {
-                console.error('Error playing audio:', error);
-            });
-        }
-        
         return foundWord;
     }
     
