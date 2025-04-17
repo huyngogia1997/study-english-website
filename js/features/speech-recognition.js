@@ -11,6 +11,7 @@ let audioChunks = [];
 let audioBlob = null;
 let audioUrl = null;
 let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+let isMinimized = false;
 
 // Create UI elements
 function createSpeechRecognitionUI() {
@@ -21,7 +22,7 @@ function createSpeechRecognitionUI() {
     speechContainer.id = 'speech-recognition-container';
     speechContainer.className = 'speech-recognition-container';
     
-    // Create header with title
+    // Create header with title and controls
     const header = document.createElement('div');
     header.className = 'speech-header';
     
@@ -29,7 +30,21 @@ function createSpeechRecognitionUI() {
     title.textContent = 'Speech Practice';
     title.className = 'speech-title';
     
+    // Create minimize/expand button
+    const toggleButton = document.createElement('button');
+    toggleButton.id = 'toggle-speech-button';
+    toggleButton.className = 'toggle-speech-button';
+    toggleButton.innerHTML = '−'; // Minus sign for minimize
+    toggleButton.title = 'Minimize';
+    toggleButton.onclick = toggleSpeechContainer;
+    
     header.appendChild(title);
+    header.appendChild(toggleButton);
+    
+    // Create content container (for minimize/expand functionality)
+    const contentContainer = document.createElement('div');
+    contentContainer.id = 'speech-content';
+    contentContainer.className = 'speech-content';
     
     // Create status indicator
     const statusIndicator = document.createElement('div');
@@ -42,7 +57,7 @@ function createSpeechRecognitionUI() {
         const recognizedWordDisplay = document.createElement('div');
         recognizedWordDisplay.id = 'recognized-word';
         recognizedWordDisplay.className = 'recognized-word';
-        speechContainer.appendChild(recognizedWordDisplay);
+        contentContainer.appendChild(recognizedWordDisplay);
     }
     
     // Create record button
@@ -115,21 +130,57 @@ function createSpeechRecognitionUI() {
         const browserNote = document.createElement('div');
         browserNote.className = 'browser-note';
         browserNote.textContent = 'Note: Speech recognition is only available in Chrome. In this browser, you can record and play back your speech.';
-        speechContainer.appendChild(browserNote);
+        contentContainer.appendChild(browserNote);
     }
     
-    // Add elements to container
+    // Add elements to content container
+    contentContainer.appendChild(statusIndicator);
+    contentContainer.appendChild(recordButton);
+    contentContainer.appendChild(audioControls);
+    contentContainer.appendChild(keyboardInfo);
+    contentContainer.appendChild(permissionButton);
+    
+    // Add header and content to main container
     speechContainer.appendChild(header);
-    speechContainer.appendChild(statusIndicator);
-    speechContainer.appendChild(recordButton);
-    speechContainer.appendChild(audioControls);
-    speechContainer.appendChild(keyboardInfo);
-    speechContainer.appendChild(permissionButton);
+    speechContainer.appendChild(contentContainer);
     
     // Add container to the page
     document.body.appendChild(speechContainer);
     
+    // Check if we should start minimized on mobile
+    if (window.innerWidth < 768) {
+        // Start minimized on mobile
+        setTimeout(() => {
+            toggleSpeechContainer();
+        }, 1000);
+    }
+    
     console.log("Speech recognition UI created");
+}
+
+// Toggle speech container between minimized and expanded states
+function toggleSpeechContainer() {
+    const container = document.getElementById('speech-recognition-container');
+    const content = document.getElementById('speech-content');
+    const toggleButton = document.getElementById('toggle-speech-button');
+    
+    if (!container || !content || !toggleButton) return;
+    
+    if (isMinimized) {
+        // Expand
+        content.style.display = 'block';
+        toggleButton.innerHTML = '−'; // Minus sign
+        toggleButton.title = 'Minimize';
+        container.classList.remove('minimized');
+        isMinimized = false;
+    } else {
+        // Minimize
+        content.style.display = 'none';
+        toggleButton.innerHTML = '+'; // Plus sign
+        toggleButton.title = 'Expand';
+        container.classList.add('minimized');
+        isMinimized = true;
+    }
 }
 
 // Request microphone permission explicitly
@@ -269,6 +320,11 @@ function setupKeyboardListeners() {
             if (!permissionGranted) {
                 requestMicrophonePermission();
                 return;
+            }
+            
+            // If minimized, expand first
+            if (isMinimized) {
+                toggleSpeechContainer();
             }
             
             // Update record button UI
