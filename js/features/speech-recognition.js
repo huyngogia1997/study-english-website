@@ -10,6 +10,7 @@ let mediaRecorder = null;
 let audioChunks = [];
 let audioBlob = null;
 let audioUrl = null;
+let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 // Create UI elements
 function createSpeechRecognitionUI() {
@@ -77,6 +78,37 @@ function createSpeechRecognitionUI() {
     // Add container to the page
     document.body.appendChild(speechContainer);
     
+    // Update instructions for Safari
+    if (isSafari) {
+        instructions.textContent = 'Safari: Use the button below to record speech';
+        
+        // Add Safari-specific recording button
+        const safariRecordButton = document.createElement('button');
+        safariRecordButton.id = 'safari-record-button';
+        safariRecordButton.className = 'safari-record-button';
+        safariRecordButton.textContent = 'Start Recording';
+        
+        let isRecordingInSafari = false;
+        
+        safariRecordButton.addEventListener('click', function() {
+            if (!isRecordingInSafari) {
+                // Start recording
+                isRecordingInSafari = true;
+                this.textContent = 'Stop Recording';
+                this.classList.add('recording');
+                startRecording();
+            } else {
+                // Stop recording
+                isRecordingInSafari = false;
+                this.textContent = 'Start Recording';
+                this.classList.remove('recording');
+                stopRecording();
+            }
+        });
+        
+        speechContainer.insertBefore(safariRecordButton, instructions);
+    }
+    
     console.log("Speech recognition UI created");
 }
 
@@ -94,8 +126,13 @@ function requestMicrophonePermission() {
     // Update status
     updateStatus('Requesting microphone access...');
     
+    // Safari requires specific audio constraints
+    const audioConstraints = isSafari ? 
+        { audio: { echoCancellation: false, noiseSuppression: false } } : 
+        { audio: true };
+    
     // Request permission via getUserMedia
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    navigator.mediaDevices.getUserMedia(audioConstraints)
         .then(stream => {
             console.log("Microphone permission granted");
             permissionGranted = true;
@@ -104,7 +141,7 @@ function requestMicrophonePermission() {
             window.audioStream = stream;
             
             // Update UI
-            updateStatus('Microphone access granted! Press SPACE to record');
+            updateStatus('Microphone access granted!');
             
             // Hide the permission button
             if (permissionButton) {
@@ -130,7 +167,21 @@ function initSpeechRecognition() {
     console.log("Initializing speech recognition");
     
     // Check if speech recognition is supported
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    if (isSafari && !('webkitSpeechRecognition' in window)) {
+        console.warn('Speech recognition not supported in Safari');
+        createSpeechRecognitionUI();
+        
+        // Show a message about limited Safari support
+        const recognizedWordElement = document.getElementById('recognized-word');
+        if (recognizedWordElement) {
+            recognizedWordElement.textContent = 'Speech recognition limited in Safari';
+            recognizedWordElement.style.fontSize = '16px';
+        }
+        
+        // Still allow recording audio for playback
+        setupKeyboardListeners();
+        return;
+    } else if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         console.warn('Speech recognition not supported in this browser');
         return;
     }
@@ -195,6 +246,12 @@ function initSpeechRecognition() {
 // Set up keyboard event listeners
 function setupKeyboardListeners() {
     console.log("Setting up keyboard listeners");
+    
+    // Skip keyboard listeners for Safari as they're less reliable
+    if (isSafari) {
+        console.log("Skipping keyboard listeners for Safari");
+        return;
+    }
     
     // Use keydown event for detecting space key press
     window.addEventListener('keydown', function(event) {
@@ -263,18 +320,18 @@ function startRecording() {
     // Update status
     updateStatus('Recording...', true);
     
-    // Start speech recognition
-    try {
-        recognition.start();
-        console.log("Recognition started");
-        
-        // Start media recording
-        startMediaRecording();
-    } catch (error) {
-        console.error('Error starting recognition:', error);
-        isRecording = false;
-        updateStatus('Error starting recognition. Try again.');
+    // Start speech recognition if available
+    if (recognition && !isSafari) {
+        try {
+            recognition.start();
+            console.log("Recognition started");
+        } catch (error) {
+            console.error('Error starting recognition:', error);
+        }
     }
+    
+    // Start media recording
+    startMediaRecording();
 }
 
 // Start media recording
@@ -286,8 +343,19 @@ function startMediaRecording() {
     }
     
     try {
-        // Create media recorder
-        mediaRecorder = new MediaRecorder(window.audioStream);
+        // Safari requires specific MIME types
+        const options = isSafari ? 
+            { mimeType: 'audio/mp4' } : 
+            { mimeType: 'audio/webm' };
+        
+        try {
+            // Create media recorder with options
+            mediaRecorder = new MediaRecorder(window.audioStream, options);
+        } catch (e) {
+            // Fallback if the specified MIME type isn't supported
+            console.warn("Specified MIME type not supported, using default");
+            mediaRecorder = new MediaRecorder(window.audioStream);
+        }
         
         // Handle data available event
         mediaRecorder.ondataavailable = (event) => {
@@ -300,8 +368,9 @@ function startMediaRecording() {
         mediaRecorder.onstop = () => {
             console.log("Media recording stopped");
             
-            // Create audio blob
-            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            // Create audio blob with appropriate type
+            const mimeType = isSafari ? 'audio/mp4' : 'audio/webm';
+            audioBlob = new Blob(audioChunks, { type: mimeType });
             
             // Create URL for the audio blob
             if (audioUrl) {
@@ -316,15 +385,25 @@ function startMediaRecording() {
                 
                 // Auto-play the recording
                 console.log("Auto-playing recording");
-                audioElement.play().catch(error => {
-                    console.error("Error auto-playing audio:", error);
-                });
-            }
-            
-            // Show replay button
-            const replayButton = document.getElementById('replay-button');
-            if (replayButton) {
-                replayButton.style.display = 'block';
+                
+                // Safari requires user interaction for audio playback
+                if (isSafari) {
+                    // Show replay button immediately for Safari
+                    const replayButton = document.getElementById('replay-button');
+                    if (replayButton) {
+                        replayButton.style.display = 'block';
+                    }
+                } else {
+                    audioElement.play().catch(error => {
+                        console.error("Error auto-playing audio:", error);
+                    });
+                    
+                    // Show replay button
+                    const replayButton = document.getElementById('replay-button');
+                    if (replayButton) {
+                        replayButton.style.display = 'block';
+                    }
+                }
             }
         };
         
@@ -333,6 +412,8 @@ function startMediaRecording() {
         console.log("Media recording started");
     } catch (error) {
         console.error("Error starting media recording:", error);
+        isRecording = false;
+        updateStatus('Error recording audio. Please try again.');
     }
 }
 
@@ -346,12 +427,14 @@ function stopRecording() {
     // Update status
     updateStatus('Processing...', false);
     
-    // Stop speech recognition
-    try {
-        recognition.stop();
-        console.log("Recognition stopped");
-    } catch (error) {
-        console.error('Error stopping recognition:', error);
+    // Stop speech recognition if available
+    if (recognition && !isSafari) {
+        try {
+            recognition.stop();
+            console.log("Recognition stopped");
+        } catch (error) {
+            console.error('Error stopping recognition:', error);
+        }
     }
     
     // Stop media recording
@@ -378,6 +461,12 @@ function replayRecording() {
     if (audioElement && audioUrl) {
         audioElement.play().catch(error => {
             console.error("Error playing audio:", error);
+            
+            // For Safari, we might need to create a new audio element
+            if (isSafari) {
+                const tempAudio = new Audio(audioUrl);
+                tempAudio.play().catch(e => console.error("Still can't play audio:", e));
+            }
         });
     } else {
         console.error("Audio element or URL not available");
