@@ -3,24 +3,41 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.98);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     text-align: center;
-    min-width: 250px;
+    min-width: 280px;
     transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
+}
+
+.speech-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.speech-title {
+    margin: 0;
+    font-size: 18px;
+    color: #2c3e50;
+    font-weight: 600;
 }
 
 .speech-status {
     font-size: 14px;
     color: #555;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 20px;
 }
 
 .speech-status.recording {
@@ -34,9 +51,9 @@
     color: #2c3e50;
     min-height: 42px;
     transition: opacity 0.3s ease;
-    margin: 10px 0;
-    padding: 5px;
-    border-radius: 5px;
+    margin: 12px 0;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 .recording-indicator {
@@ -49,14 +66,6 @@
     animation: pulse 1.5s infinite;
 }
 
-.speech-instructions {
-    font-size: 12px;
-    color: #7f8c8d;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-style: italic;
-}
-
 .word-found {
     background-color: #e8f5e9;
     border: 1px solid #c8e6c9;
@@ -67,26 +76,60 @@
     border: 1px solid #ffcdd2;
 }
 
-.permission-button {
-    background-color: #3498db;
+.record-button {
+    background-color: #e74c3c;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
+    border-radius: 8px;
+    padding: 12px 15px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
-    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 10px 0;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.permission-button:hover {
-    background-color: #2980b9;
+.record-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.permission-button:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
+.record-button.recording {
+    background-color: #c0392b;
+    animation: pulse-button 1.5s infinite;
+}
+
+.record-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.stop-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: white;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+.replay-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid white;
+    margin-right: 8px;
 }
 
 .speech-audio-controls {
@@ -103,41 +146,67 @@
     background-color: #27ae60;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
+    border-radius: 8px;
+    padding: 10px 15px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
     margin-top: 5px;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .replay-button:hover {
     background-color: #219653;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Safari-specific button */
-.safari-record-button {
-    background-color: #e74c3c;
+.keyboard-info {
+    margin: 12px 0;
+    font-size: 13px;
+    color: #7f8c8d;
+    padding: 8px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboard-icon {
+    margin-right: 6px;
+    font-size: 15px;
+}
+
+.permission-button {
+    background-color: #3498db;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 10px 15px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.2s;
-    margin: 10px 0;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 10px;
     width: 100%;
 }
 
-.safari-record-button:hover {
-    background-color: #c0392b;
+.permission-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.safari-record-button.recording {
-    background-color: #c0392b;
-    animation: pulse-button 1.5s infinite;
+.permission-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 @keyframes pulse {
@@ -148,7 +217,7 @@
 
 @keyframes pulse-button {
     0% { opacity: 1; }
-    50% { opacity: 0.7; }
+    50% { opacity: 0.8; }
     100% { opacity: 1; }
 }
 
@@ -158,5 +227,14 @@
         right: 10px;
         left: 10px;
         width: calc(100% - 20px);
+        padding: 15px;
+    }
+    
+    .speech-title {
+        font-size: 16px;
+    }
+    
+    .record-button, .replay-button, .permission-button {
+        padding: 12px 10px;
     }
 }

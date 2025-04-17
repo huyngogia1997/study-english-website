@@ -21,16 +21,55 @@ function createSpeechRecognitionUI() {
     speechContainer.id = 'speech-recognition-container';
     speechContainer.className = 'speech-recognition-container';
     
+    // Create header with title
+    const header = document.createElement('div');
+    header.className = 'speech-header';
+    
+    const title = document.createElement('h3');
+    title.textContent = 'Speech Practice';
+    title.className = 'speech-title';
+    
+    header.appendChild(title);
+    
     // Create status indicator
     const statusIndicator = document.createElement('div');
     statusIndicator.id = 'speech-status';
     statusIndicator.className = 'speech-status';
-    statusIndicator.textContent = 'Press and hold SPACE to record';
+    statusIndicator.textContent = 'Ready to record';
     
     // Create recognized word display
     const recognizedWordDisplay = document.createElement('div');
     recognizedWordDisplay.id = 'recognized-word';
     recognizedWordDisplay.className = 'recognized-word';
+    
+    // Create record button (always visible)
+    const recordButton = document.createElement('button');
+    recordButton.id = 'record-button';
+    recordButton.className = 'record-button';
+    recordButton.innerHTML = '<span class="record-icon"></span>Record';
+    
+    // Add record button functionality
+    let isButtonRecording = false;
+    recordButton.addEventListener('click', function() {
+        if (!permissionGranted) {
+            requestMicrophonePermission();
+            return;
+        }
+        
+        if (!isButtonRecording) {
+            // Start recording
+            isButtonRecording = true;
+            this.innerHTML = '<span class="stop-icon"></span>Stop';
+            this.classList.add('recording');
+            startRecording();
+        } else {
+            // Stop recording
+            isButtonRecording = false;
+            this.innerHTML = '<span class="record-icon"></span>Record';
+            this.classList.remove('recording');
+            stopRecording();
+        }
+    });
     
     // Create audio controls
     const audioControls = document.createElement('div');
@@ -48,7 +87,7 @@ function createSpeechRecognitionUI() {
     const replayButton = document.createElement('button');
     replayButton.id = 'replay-button';
     replayButton.className = 'replay-button';
-    replayButton.textContent = 'Replay Your Speech';
+    replayButton.innerHTML = '<span class="replay-icon"></span>Replay';
     replayButton.style.display = 'none';
     replayButton.onclick = replayRecording;
     
@@ -56,10 +95,10 @@ function createSpeechRecognitionUI() {
     audioControls.appendChild(audioElement);
     audioControls.appendChild(replayButton);
     
-    // Add instructions
-    const instructions = document.createElement('div');
-    instructions.className = 'speech-instructions';
-    instructions.textContent = 'Hold space anywhere on the page to record speech';
+    // Create keyboard shortcut info
+    const keyboardInfo = document.createElement('div');
+    keyboardInfo.className = 'keyboard-info';
+    keyboardInfo.innerHTML = '<span class="keyboard-icon">⌨️</span> Press <strong>SPACE</strong> to record';
     
     // Add permission button
     const permissionButton = document.createElement('button');
@@ -69,45 +108,16 @@ function createSpeechRecognitionUI() {
     permissionButton.onclick = requestMicrophonePermission;
     
     // Add elements to container
+    speechContainer.appendChild(header);
     speechContainer.appendChild(statusIndicator);
     speechContainer.appendChild(recognizedWordDisplay);
+    speechContainer.appendChild(recordButton);
     speechContainer.appendChild(audioControls);
-    speechContainer.appendChild(instructions);
+    speechContainer.appendChild(keyboardInfo);
     speechContainer.appendChild(permissionButton);
     
     // Add container to the page
     document.body.appendChild(speechContainer);
-    
-    // Update instructions for Safari
-    if (isSafari) {
-        instructions.textContent = 'Safari: Use the button below to record speech';
-        
-        // Add Safari-specific recording button
-        const safariRecordButton = document.createElement('button');
-        safariRecordButton.id = 'safari-record-button';
-        safariRecordButton.className = 'safari-record-button';
-        safariRecordButton.textContent = 'Start Recording';
-        
-        let isRecordingInSafari = false;
-        
-        safariRecordButton.addEventListener('click', function() {
-            if (!isRecordingInSafari) {
-                // Start recording
-                isRecordingInSafari = true;
-                this.textContent = 'Stop Recording';
-                this.classList.add('recording');
-                startRecording();
-            } else {
-                // Stop recording
-                isRecordingInSafari = false;
-                this.textContent = 'Start Recording';
-                this.classList.remove('recording');
-                stopRecording();
-            }
-        });
-        
-        speechContainer.insertBefore(safariRecordButton, instructions);
-    }
     
     console.log("Speech recognition UI created");
 }
@@ -141,7 +151,7 @@ function requestMicrophonePermission() {
             window.audioStream = stream;
             
             // Update UI
-            updateStatus('Microphone access granted!');
+            updateStatus('Ready to record');
             
             // Hide the permission button
             if (permissionButton) {
@@ -224,7 +234,7 @@ function initSpeechRecognition() {
         
         // Reset status after 2 seconds
         setTimeout(() => {
-            updateStatus('Press and hold SPACE to record');
+            updateStatus('Ready to record');
         }, 2000);
     };
     
@@ -273,6 +283,13 @@ function setupKeyboardListeners() {
                 return;
             }
             
+            // Update record button UI
+            const recordButton = document.getElementById('record-button');
+            if (recordButton) {
+                recordButton.innerHTML = '<span class="stop-icon"></span>Stop';
+                recordButton.classList.add('recording');
+            }
+            
             startRecording();
         }
     }, true);
@@ -284,6 +301,14 @@ function setupKeyboardListeners() {
         // Check if space key is released and currently recording
         if (event.code === 'Space' && isRecording) {
             console.log("Space key released - stopping recording");
+            
+            // Update record button UI
+            const recordButton = document.getElementById('record-button');
+            if (recordButton) {
+                recordButton.innerHTML = '<span class="record-icon"></span>Record';
+                recordButton.classList.remove('recording');
+            }
+            
             stopRecording();
         }
     }, true);
@@ -449,7 +474,7 @@ function stopRecording() {
     
     // Reset status after processing
     setTimeout(() => {
-        updateStatus('Press and hold SPACE to record');
+        updateStatus('Ready to record');
     }, 1000);
 }
 
