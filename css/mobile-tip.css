@@ -1,0 +1,76 @@
+/* Mobile Tip Banner Styles */
+
+.mobile-tip-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(52, 152, 219, 0.95);
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1001;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease;
+}
+
+.tip-content {
+    flex: 1;
+}
+
+.tip-content p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.dismiss-tip {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    margin-left: 10px;
+}
+
+.touch-record-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 15px;
+    margin: 10px 0;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.touch-record-button.recording {
+    background-color: #c0392b;
+    animation: pulse-button 1.5s infinite;
+}
+
+@keyframes pulse-button {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Adjust content padding when tip banner is shown */
+body.has-tip-banner main {
+    padding-top: 50px;
+}
+
+/* Landscape orientation specific styles */
+@media (orientation: landscape) {
+    .mobile-tip-banner {
+        padding: 5px 15px;
+    }
+    
+    .touch-record-button {
+        padding: 8px 15px;
+    }
+}

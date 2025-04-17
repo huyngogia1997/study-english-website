@@ -1,0 +1,282 @@
+/* Mobile Optimization Styles */
+
+/* Base mobile styles */
+@media (max-width: 768px) {
+    /* General layout */
+    body {
+        font-size: 16px;
+    }
+    
+    main {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    /* Navigation tabs */
+    .tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px;
+        margin: 2px;
+        font-size: 14px;
+        flex-grow: 1;
+        text-align: center;
+    }
+    
+    /* Search panels */
+    .search-panel {
+        padding: 15px 10px;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .search-container input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .search-container button {
+        width: 100%;
+    }
+    
+    /* Phonetic buttons */
+    .phonetic-buttons {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+    }
+    
+    .phonetic-btn {
+        padding: 8px;
+        font-size: 14px;
+        margin: 2px;
+    }
+    
+    /* Multi-phonetic search */
+    .checkbox-group {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .phonetic-checkbox {
+        margin: 3px;
+    }
+    
+    .search-controls {
+        flex-direction: column;
+    }
+    
+    .search-controls button {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    /* Sound comparison */
+    .comparison-container {
+        flex-direction: column;
+    }
+    
+    .sound-selector {
+        flex-direction: column;
+    }
+    
+    .sound-column {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .comparison-results {
+        flex-direction: column;
+    }
+    
+    .comparison-column {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    /* Results display */
+    .word-card {
+        padding: 15px;
+    }
+    
+    .word-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .word-title {
+        font-size: 22px;
+        margin-bottom: 5px;
+    }
+    
+    .audio-controls {
+        margin-top: 10px;
+    }
+    
+    /* Pagination */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .pagination button {
+        margin: 2px;
+        padding: 6px 10px;
+    }
+    
+    /* Games section */
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-card {
+        margin: 10px 0;
+    }
+    
+    /* Speech recognition */
+    .speech-recognition-container {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        padding: 12px;
+    }
+    
+    .recognized-word {
+        font-size: 22px;
+        min-height: 34px;
+    }
+    
+    .replay-button, .permission-button {
+        padding: 10px;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    /* Further optimizations for very small screens */
+    .tabs {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 5px;
+    }
+    
+    .tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    h2 {
+        font-size: 18px;
+    }
+    
+    .phonetic-buttons {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .checkbox-group {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .position-buttons {
+        flex-direction: column;
+    }
+    
+    .position-btn {
+        width: 100%;
+        margin: 3px 0;
+    }
+    
+    /* Ensure touch targets are at least 44x44px */
+    button, 
+    .tab-btn, 
+    .phonetic-btn, 
+    .position-btn,
+    .pagination button,
+    .audio-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    input[type="checkbox"], 
+    input[type="radio"] {
+        transform: scale(1.2);
+        margin: 10px;
+    }
+    
+    label {
+        padding: 10px 0;
+    }
+}
+
+/* Landscape orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    .speech-recognition-container {
+        bottom: 5px;
+        right: 5px;
+        width: 250px;
+        left: auto;
+    }
+    
+    .tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets for all interactive elements */
+    button,
+    .tab-btn,
+    .phonetic-btn,
+    .audio-btn,
+    .pagination button,
+    select,
+    input[type="text"],
+    input[type="search"] {
+        padding: 12px;
+    }
+    
+    /* Add more space between interactive elements */
+    .phonetic-checkbox {
+        padding: 8px 4px;
+    }
+    
+    /* Increase spacing for better touch accuracy */
+    .word-card {
+        margin-bottom: 15px;
+    }
+    
+    /* Make sure form elements are large enough */
+    select, input {
+        font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+}
