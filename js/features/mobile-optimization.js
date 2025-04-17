@@ -6,10 +6,14 @@ function initMobileOptimizations() {
     
     // Check if we're on a mobile device
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const isTablet = /iPad|tablet|Tablet/i.test(navigator.userAgent) || (window.innerWidth >= 768 && window.innerWidth <= 1024);
     
     if (isMobile) {
         console.log("Mobile device detected");
         applyMobileOptimizations();
+    } else if (isTablet) {
+        console.log("Tablet device detected");
+        applyTabletOptimizations();
     } else {
         console.log("Desktop device detected");
     }
@@ -19,6 +23,14 @@ function initMobileOptimizations() {
     
     // Set up touch-specific event handlers
     setupTouchHandlers();
+    
+    // Add device class to body
+    if (isTablet) {
+        document.body.classList.add('tablet');
+    }
+    if (/iPad/i.test(navigator.userAgent)) {
+        document.body.classList.add('ipad');
+    }
 }
 
 // Apply mobile-specific optimizations
@@ -37,6 +49,50 @@ function applyMobileOptimizations() {
     
     // Add mobile-specific instructions
     addMobileInstructions();
+}
+
+// Apply tablet-specific optimizations
+function applyTabletOptimizations() {
+    // Add tablet class to body for CSS targeting
+    document.body.classList.add('tablet');
+    
+    // Optimize for tablet screens
+    optimizeTabletLayout();
+    
+    // Optimize audio controls for touch
+    optimizeAudioControls();
+}
+
+// Optimize layout for tablets
+function optimizeTabletLayout() {
+    // Ensure speech recognition container is properly sized
+    const speechContainer = document.getElementById('speech-recognition-container');
+    if (speechContainer) {
+        // Force larger size for iPad/tablets
+        speechContainer.style.width = '380px';
+        speechContainer.style.maxWidth = '380px';
+        
+        // Make buttons larger
+        const buttons = speechContainer.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.style.padding = '16px';
+            button.style.fontSize = '18px';
+        });
+        
+        // Make recognized word larger
+        const recognizedWord = speechContainer.querySelector('#recognized-word');
+        if (recognizedWord) {
+            recognizedWord.style.fontSize = '32px';
+            recognizedWord.style.minHeight = '48px';
+        }
+    }
+    
+    // Make tab buttons larger
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.style.padding = '12px 20px';
+        btn.style.fontSize = '16px';
+    });
 }
 
 // Optimize tab navigation for mobile
@@ -156,12 +212,19 @@ function addMobileInstructions() {
 // Handle window resize events
 function handleResize() {
     const isMobile = window.innerWidth < 768;
+    const isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024;
     
     if (isMobile && !document.body.classList.contains('mobile')) {
         document.body.classList.add('mobile');
+        document.body.classList.remove('tablet');
         applyMobileOptimizations();
-    } else if (!isMobile && document.body.classList.contains('mobile')) {
+    } else if (isTablet && !document.body.classList.contains('tablet')) {
+        document.body.classList.add('tablet');
         document.body.classList.remove('mobile');
+        applyTabletOptimizations();
+    } else if (!isMobile && !isTablet) {
+        document.body.classList.remove('mobile');
+        document.body.classList.remove('tablet');
         // Revert any mobile-specific DOM changes if needed
     }
 }
@@ -190,7 +253,7 @@ document.addEventListener('DOMContentLoaded', initMobileOptimizations);
 
 // Also initialize on window load as a fallback
 window.addEventListener('load', () => {
-    if (!document.body.classList.contains('mobile') && window.innerWidth < 768) {
+    if (!document.body.classList.contains('mobile') && !document.body.classList.contains('tablet')) {
         initMobileOptimizations();
     }
 });

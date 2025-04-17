@@ -10,6 +10,7 @@
     z-index: 1000;
     text-align: center;
     min-width: 280px;
+    max-width: 400px;
     transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
 }
@@ -221,13 +222,15 @@
     100% { opacity: 1; }
 }
 
-@media (max-width: 768px) {
+/* Mobile phone styles */
+@media (max-width: 480px) {
     .speech-recognition-container {
         bottom: 10px;
         right: 10px;
         left: 10px;
         width: calc(100% - 20px);
         padding: 15px;
+        max-width: none;
     }
     
     .speech-title {
@@ -236,5 +239,93 @@
     
     .record-button, .replay-button, .permission-button {
         padding: 12px 10px;
+    }
+}
+
+/* iPad and tablet styles */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .speech-recognition-container {
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        max-width: none;
+        padding: 20px;
+    }
+    
+    .speech-title {
+        font-size: 20px;
+    }
+    
+    .recognized-word {
+        font-size: 32px;
+        min-height: 48px;
+    }
+    
+    .record-button, .replay-button {
+        padding: 15px;
+        font-size: 18px;
+    }
+    
+    .record-icon, .stop-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .replay-icon {
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 14px solid white;
+    }
+    
+    .keyboard-info {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* iPad Pro and larger tablets */
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) {
+    .speech-recognition-container {
+        bottom: 30px;
+        right: 30px;
+        width: 400px;
+        padding: 25px;
+    }
+    
+    .speech-title {
+        font-size: 22px;
+    }
+    
+    .recognized-word {
+        font-size: 36px;
+        min-height: 54px;
+    }
+    
+    .record-button, .replay-button {
+        padding: 18px;
+        font-size: 20px;
+    }
+    
+    .record-icon, .stop-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+    }
+    
+    .replay-icon {
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-left: 16px solid white;
+        margin-right: 10px;
+    }
+}
+
+/* Landscape orientation for tablets */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1366px) and (orientation: landscape) {
+    .speech-recognition-container {
+        bottom: 20px;
+        right: 20px;
+        width: 380px;
+        max-width: 30%;
     }
 }
