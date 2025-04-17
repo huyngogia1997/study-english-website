@@ -210,6 +210,17 @@
     box-shadow: none;
 }
 
+.browser-note {
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #3498db;
+    color: #555;
+    font-size: 13px;
+    text-align: left;
+    border-radius: 4px;
+}
+
 @keyframes pulse {
     0% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.3; transform: scale(0.8); }

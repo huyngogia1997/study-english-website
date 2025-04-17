@@ -10,7 +10,7 @@ let mediaRecorder = null;
 let audioChunks = [];
 let audioBlob = null;
 let audioUrl = null;
-let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
 // Create UI elements
 function createSpeechRecognitionUI() {
@@ -37,12 +37,15 @@ function createSpeechRecognitionUI() {
     statusIndicator.className = 'speech-status';
     statusIndicator.textContent = 'Ready to record';
     
-    // Create recognized word display
-    const recognizedWordDisplay = document.createElement('div');
-    recognizedWordDisplay.id = 'recognized-word';
-    recognizedWordDisplay.className = 'recognized-word';
+    // Create recognized word display (only for Chrome)
+    if (isChrome) {
+        const recognizedWordDisplay = document.createElement('div');
+        recognizedWordDisplay.id = 'recognized-word';
+        recognizedWordDisplay.className = 'recognized-word';
+        speechContainer.appendChild(recognizedWordDisplay);
+    }
     
-    // Create record button (always visible)
+    // Create record button
     const recordButton = document.createElement('button');
     recordButton.id = 'record-button';
     recordButton.className = 'record-button';
@@ -107,10 +110,17 @@ function createSpeechRecognitionUI() {
     permissionButton.textContent = 'Grant Microphone Access';
     permissionButton.onclick = requestMicrophonePermission;
     
+    // Add browser-specific message
+    if (!isChrome) {
+        const browserNote = document.createElement('div');
+        browserNote.className = 'browser-note';
+        browserNote.textContent = 'Note: Speech recognition is only available in Chrome. In this browser, you can record and play back your speech.';
+        speechContainer.appendChild(browserNote);
+    }
+    
     // Add elements to container
     speechContainer.appendChild(header);
     speechContainer.appendChild(statusIndicator);
-    speechContainer.appendChild(recognizedWordDisplay);
     speechContainer.appendChild(recordButton);
     speechContainer.appendChild(audioControls);
     speechContainer.appendChild(keyboardInfo);
@@ -136,13 +146,8 @@ function requestMicrophonePermission() {
     // Update status
     updateStatus('Requesting microphone access...');
     
-    // Safari requires specific audio constraints
-    const audioConstraints = isSafari ? 
-        { audio: { echoCancellation: false, noiseSuppression: false } } : 
-        { audio: true };
-    
     // Request permission via getUserMedia
-    navigator.mediaDevices.getUserMedia(audioConstraints)
+    navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
             console.log("Microphone permission granted");
             permissionGranted = true;
@@ -176,73 +181,62 @@ function requestMicrophonePermission() {
 function initSpeechRecognition() {
     console.log("Initializing speech recognition");
     
-    // Check if speech recognition is supported
-    if (isSafari && !('webkitSpeechRecognition' in window)) {
-        console.warn('Speech recognition not supported in Safari');
-        createSpeechRecognitionUI();
-        
-        // Show a message about limited Safari support
-        const recognizedWordElement = document.getElementById('recognized-word');
-        if (recognizedWordElement) {
-            recognizedWordElement.textContent = 'Speech recognition limited in Safari';
-            recognizedWordElement.style.fontSize = '16px';
+    // Only initialize speech recognition in Chrome
+    if (isChrome) {
+        // Check if speech recognition is supported
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            console.warn('Speech recognition not supported');
+            return;
         }
         
-        // Still allow recording audio for playback
-        setupKeyboardListeners();
-        return;
-    } else if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        console.warn('Speech recognition not supported in this browser');
-        return;
-    }
-    
-    // Create speech recognition object
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    
-    // Configure recognition
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    
-    // Handle results
-    recognition.onresult = (event) => {
-        console.log("Speech recognition result received");
-        const transcript = event.results[0][0].transcript;
-        displayRecognizedWord(transcript);
-    };
-    
-    // Handle errors
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        stopRecording();
+        // Create speech recognition object
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
         
-        if (event.error === 'not-allowed') {
-            updateStatus('Microphone access denied');
-            permissionGranted = false;
+        // Configure recognition
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        
+        // Handle results
+        recognition.onresult = (event) => {
+            console.log("Speech recognition result received");
+            const transcript = event.results[0][0].transcript;
+            displayRecognizedWord(transcript);
+        };
+        
+        // Handle errors
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            stopRecording();
             
-            // Show the permission button again
-            const permissionButton = document.getElementById('permission-button');
-            if (permissionButton) {
-                permissionButton.style.display = 'block';
-                permissionButton.textContent = 'Grant Microphone Access';
-                permissionButton.disabled = false;
+            if (event.error === 'not-allowed') {
+                updateStatus('Microphone access denied');
+                permissionGranted = false;
+                
+                // Show the permission button again
+                const permissionButton = document.getElementById('permission-button');
+                if (permissionButton) {
+                    permissionButton.style.display = 'block';
+                    permissionButton.textContent = 'Grant Microphone Access';
+                    permissionButton.disabled = false;
+                }
+            } else {
+                updateStatus('Error occurred. Try again.');
             }
-        } else {
-            updateStatus('Error occurred. Try again.');
-        }
+            
+            // Reset status after 2 seconds
+            setTimeout(() => {
+                updateStatus('Ready to record');
+            }, 2000);
+        };
         
-        // Reset status after 2 seconds
-        setTimeout(() => {
-            updateStatus('Ready to record');
-        }, 2000);
-    };
-    
-    // Handle end of recognition
-    recognition.onend = () => {
-        console.log("Speech recognition ended");
-        stopRecording();
-    };
+        // Handle end of recognition
+        recognition.onend = () => {
+            console.log("Speech recognition ended");
+            stopRecording();
+        };
+    }
     
     // Create UI elements
     createSpeechRecognitionUI();
@@ -256,12 +250,6 @@ function initSpeechRecognition() {
 // Set up keyboard event listeners
 function setupKeyboardListeners() {
     console.log("Setting up keyboard listeners");
-    
-    // Skip keyboard listeners for Safari as they're less reliable
-    if (isSafari) {
-        console.log("Skipping keyboard listeners for Safari");
-        return;
-    }
     
     // Use keydown event for detecting space key press
     window.addEventListener('keydown', function(event) {
@@ -329,11 +317,13 @@ function startRecording() {
         clearTimeout(wordDisplayTimeout);
     }
     
-    // Clear previous recognized word
-    const recognizedWordElement = document.getElementById('recognized-word');
-    if (recognizedWordElement) {
-        recognizedWordElement.textContent = '';
-        recognizedWordElement.className = 'recognized-word';
+    // Clear previous recognized word (Chrome only)
+    if (isChrome) {
+        const recognizedWordElement = document.getElementById('recognized-word');
+        if (recognizedWordElement) {
+            recognizedWordElement.textContent = '';
+            recognizedWordElement.className = 'recognized-word';
+        }
     }
     
     // Hide replay button
@@ -345,8 +335,8 @@ function startRecording() {
     // Update status
     updateStatus('Recording...', true);
     
-    // Start speech recognition if available
-    if (recognition && !isSafari) {
+    // Start speech recognition if in Chrome
+    if (isChrome && recognition) {
         try {
             recognition.start();
             console.log("Recognition started");
@@ -368,19 +358,8 @@ function startMediaRecording() {
     }
     
     try {
-        // Safari requires specific MIME types
-        const options = isSafari ? 
-            { mimeType: 'audio/mp4' } : 
-            { mimeType: 'audio/webm' };
-        
-        try {
-            // Create media recorder with options
-            mediaRecorder = new MediaRecorder(window.audioStream, options);
-        } catch (e) {
-            // Fallback if the specified MIME type isn't supported
-            console.warn("Specified MIME type not supported, using default");
-            mediaRecorder = new MediaRecorder(window.audioStream);
-        }
+        // Create media recorder
+        mediaRecorder = new MediaRecorder(window.audioStream);
         
         // Handle data available event
         mediaRecorder.ondataavailable = (event) => {
@@ -393,9 +372,8 @@ function startMediaRecording() {
         mediaRecorder.onstop = () => {
             console.log("Media recording stopped");
             
-            // Create audio blob with appropriate type
-            const mimeType = isSafari ? 'audio/mp4' : 'audio/webm';
-            audioBlob = new Blob(audioChunks, { type: mimeType });
+            // Create audio blob
+            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             
             // Create URL for the audio blob
             if (audioUrl) {
@@ -410,24 +388,14 @@ function startMediaRecording() {
                 
                 // Auto-play the recording
                 console.log("Auto-playing recording");
+                audioElement.play().catch(error => {
+                    console.error("Error auto-playing audio:", error);
+                });
                 
-                // Safari requires user interaction for audio playback
-                if (isSafari) {
-                    // Show replay button immediately for Safari
-                    const replayButton = document.getElementById('replay-button');
-                    if (replayButton) {
-                        replayButton.style.display = 'block';
-                    }
-                } else {
-                    audioElement.play().catch(error => {
-                        console.error("Error auto-playing audio:", error);
-                    });
-                    
-                    // Show replay button
-                    const replayButton = document.getElementById('replay-button');
-                    if (replayButton) {
-                        replayButton.style.display = 'block';
-                    }
+                // Show replay button
+                const replayButton = document.getElementById('replay-button');
+                if (replayButton) {
+                    replayButton.style.display = 'block';
                 }
             }
         };
@@ -452,8 +420,8 @@ function stopRecording() {
     // Update status
     updateStatus('Processing...', false);
     
-    // Stop speech recognition if available
-    if (recognition && !isSafari) {
+    // Stop speech recognition if in Chrome
+    if (isChrome && recognition) {
         try {
             recognition.stop();
             console.log("Recognition stopped");
@@ -486,20 +454,16 @@ function replayRecording() {
     if (audioElement && audioUrl) {
         audioElement.play().catch(error => {
             console.error("Error playing audio:", error);
-            
-            // For Safari, we might need to create a new audio element
-            if (isSafari) {
-                const tempAudio = new Audio(audioUrl);
-                tempAudio.play().catch(e => console.error("Still can't play audio:", e));
-            }
         });
     } else {
         console.error("Audio element or URL not available");
     }
 }
 
-// Display recognized word
+// Display recognized word (Chrome only)
 function displayRecognizedWord(word) {
+    if (!isChrome) return;
+    
     console.log("Displaying recognized word:", word);
     const recognizedWordElement = document.getElementById('recognized-word');
     if (!recognizedWordElement) {
@@ -518,7 +482,6 @@ function displayRecognizedWord(word) {
         recognizedWordElement.classList.remove('word-not-found');
         
         // Wait a moment before playing the dictionary pronunciation
-        // to allow the user's recording to play first
         setTimeout(() => {
             // Play the pronunciation if available
             if (foundWord.value.uk && foundWord.value.uk.mp3) {
@@ -534,15 +497,17 @@ function displayRecognizedWord(word) {
         recognizedWordElement.classList.remove('word-found');
     }
     
-    // Hide word after 3 seconds (increased from 2 seconds to give more time to read)
+    // Hide word after 3 seconds
     wordDisplayTimeout = setTimeout(() => {
         recognizedWordElement.textContent = '';
         recognizedWordElement.className = 'recognized-word';
     }, 3000);
 }
 
-// Search for the recognized word in our dictionary
+// Search for the recognized word in our dictionary (Chrome only)
 function searchForRecognizedWord(word) {
+    if (!isChrome) return null;
+    
     // Clean up the word (lowercase, remove punctuation)
     const cleanWord = word.toLowerCase().replace(/[^\w\s]/g, '').trim();
     

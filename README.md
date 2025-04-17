@@ -1,12 +1,15 @@
 # English Study Website
 
-A web application for studying English words and their pronunciations, inspired by the Oxford Learner's Dictionary.
+A comprehensive web application for studying English words and their pronunciations, inspired by the Oxford Learner's Dictionary.
 
 ## Features
 
 - **Word Search**: Search for English words and see their definitions, types, and pronunciation
-- **Multi-Phonetic Search**: Search for words containing multiple phonetic sounds simultaneously
+- **Phonetic Search**: Search for words containing specific phonetic sounds
+- **Multi-Phonetic Search**: Search for words containing multiple phonetic sounds simultaneously with AND/OR logic
 - **Sound Comparison**: Compare two phonetic sounds and find words with similar phonetic structures
+- **Speech Practice**: Record and play back your pronunciation (speech recognition available in Chrome)
+- **Games Section**: Interactive games for pronunciation practice
 - **Special Phonetic Handling**: Properly handles special cases for combined sounds like "tʃ" and "dʒ"
 - **Audio Playback**: Listen to UK and US pronunciations of words
 - **Oxford Dictionary Integration**: Links to the Oxford Learner's Dictionary for more detailed information
@@ -15,8 +18,8 @@ A web application for studying English words and their pronunciations, inspired 
 
 - **Database**: Uses an online JSON file from GitHub repository (Oxford-5000-words)
 - **Frontend**: Built with HTML, CSS, and vanilla JavaScript
-- **Responsive Design**: Works on both desktop and mobile devices
-- **Modular Code Structure**: Organized into core and features modules
+- **Responsive Design**: Works on desktop, tablets, and mobile devices
+- **Modular Code Structure**: Organized into core, features, and games modules
 
 ## How to Use
 
@@ -46,9 +49,40 @@ A web application for studying English words and their pronunciations, inspired 
    - Use the position buttons (First, Middle, Last) to switch between position categories
    - Words are matched based on where the sounds appear in the word
 
+5. **Speech Practice**:
+   - Click on the "Record" button or press and hold the SPACE key
+   - Speak the word you want to practice
+   - Release the button or SPACE key to stop recording
+   - Your recording will automatically play back
+   - **Chrome Only**: The recognized word will be displayed and if found in the dictionary, its pronunciation will play for comparison
+   - **Other Browsers**: Record and play back your speech without word recognition
+   - Click "Replay" to hear your recording again
+
+6. **Games Section**:
+   - Choose from various interactive games:
+     - Sound Matching Game
+     - Minimal Pairs Challenge
+     - Sound Position Puzzle
+     - Phonetic Hangman
+     - Sound Sorting
+
 ## Special Phonetic Search Handling
 
 When searching for individual sounds like "t", "ʃ", "d", or "ʒ", the search will not include words with combined sounds like "tʃ" and "dʒ" because the pronunciation of these combined sounds differs from their individual components.
+
+## Mobile and Tablet Support
+
+- Responsive design that adapts to different screen sizes
+- Touch-friendly interface with appropriately sized buttons
+- Special optimizations for iPad and tablet devices
+- Support for both portrait and landscape orientations
+- Cross-browser compatibility including Safari
+
+## Browser Compatibility
+
+- **Chrome**: Full functionality including speech recognition
+- **Safari, Firefox, Edge, etc.**: All features except speech-to-text recognition
+- All browsers support recording and playback of speech
 
 ## Getting Started
 
@@ -59,10 +93,10 @@ When searching for individual sounds like "t", "ʃ", "d", or "ʒ", the search wi
 ## Future Improvements
 
 - Add more phonetic sounds to the quick-access buttons
-- Implement pagination for search results ✓
-- Add filtering options (by word type, level, etc.)
-- Improve mobile responsiveness
+- Implement filtering options (by word type, level, etc.)
 - Add a favorites/bookmarks feature
+- Expand the games section with more interactive exercises
+- Add user accounts to save progress
 
 ## Credits
 
