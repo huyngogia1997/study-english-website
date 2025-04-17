@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Study Website</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/games.css">
+</head>
+<body>
+    <header>
+        <h1>English Study Website</h1>
+        <p>Study English words and their pronunciations</p>
+    </header>
+    
+    <main>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="word-search">Word Search</button>
+            <button class="tab-btn" data-tab="phonetic-search">Phonetic Search</button>
+            <button class="tab-btn" data-tab="multi-phonetic-search">Multi-Phonetic Search</button>
+            <button class="tab-btn" data-tab="sound-comparison">Sound Comparison</button>
+            <button class="tab-btn" data-tab="games">Games</button>
+        </div>
+        
+        <div class="content">
+            <div id="word-search" class="search-panel active">
+                <h2>Search for a word</h2>
+                <div class="search-container">
+                    <input type="text" id="word-input" placeholder="Enter a word...">
+                    <button id="word-search-btn" class="primary-btn">Search</button>
+                </div>
+            </div>
+            
+            <div id="phonetic-search" class="search-panel">
+                <h2>Search by phonetic sound</h2>
+                <div class="search-container">
+                    <input type="text" id="phonetic-input" placeholder="Enter a phonetic sound...">
+                    <button id="phonetic-search-btn" class="primary-btn">Search</button>
+                </div>
+                
+                <div class="phonetic-buttons">
+                    <h3>Common Vowel Sounds</h3>
+                    <div class="button-group">
+                        <button class="phonetic-btn" data-sound="æ">æ</button>
+                        <button class="phonetic-btn" data-sound="ə">ə</button>
+                        <button class="phonetic-btn" data-sound="ɑ">ɑ</button>
+                        <button class="phonetic-btn" data-sound="ɔ">ɔ</button>
+                        <button class="phonetic-btn" data-sound="ɛ">ɛ</button>
+                        <button class="phonetic-btn" data-sound="ɪ">ɪ</button>
+                        <button class="phonetic-btn" data-sound="i">i</button>
+                        <button class="phonetic-btn" data-sound="ʊ">ʊ</button>
+                        <button class="phonetic-btn" data-sound="u">u</button>
+                        <button class="phonetic-btn" data-sound="ʌ">ʌ</button>
+                    </div>
+                    
+                    <h3>Common Consonant Sounds</h3>
+                    <div class="button-group">
+                        <button class="phonetic-btn" data-sound="θ">θ</button>
+                        <button class="phonetic-btn" data-sound="ð">ð</button>
+                        <button class="phonetic-btn" data-sound="ʃ">ʃ</button>
+                        <button class="phonetic-btn" data-sound="ʒ">ʒ</button>
+                        <button class="phonetic-btn" data-sound="tʃ">tʃ</button>
+                        <button class="phonetic-btn" data-sound="dʒ">dʒ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="multi-phonetic-search" class="search-panel">
+                <h2>Search by multiple phonetic sounds</h2>
+                <p>Select multiple sounds to find words containing them:</p>
+                
+                <div class="search-mode">
+                    <label>
+                        <input type="radio" name="search-mode" value="AND" checked>
+                        AND (words containing ALL selected sounds)
+                    </label>
+                    <label>
+                        <input type="radio" name="search-mode" value="OR">
+                        OR (words containing ANY of the selected sounds)
+                    </label>
+                </div>
+                
+                <div class="selected-sounds">
+                    <p>Selected sounds: <span id="selected-sounds-display">None</span></p>
+                </div>
+                
+                <div class="phonetic-checkboxes">
+                    <h3>Vowel Sounds</h3>
+                    <div class="checkbox-group">
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="æ">
+                            <span>æ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ə">
+                            <span>ə</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ɑ">
+                            <span>ɑ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ɔ">
+                            <span>ɔ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ɛ">
+                            <span>ɛ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ɪ">
+                            <span>ɪ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="i">
+                            <span>i</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ʊ">
+                            <span>ʊ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="u">
+                            <span>u</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ʌ">
+                            <span>ʌ</span>
+                        </label>
+                    </div>
+                    
+                    <h3>Consonant Sounds</h3>
+                    <div class="checkbox-group">
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="p">
+                            <span>p</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="b">
+                            <span>b</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="t">
+                            <span>t</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="d">
+                            <span>d</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="k">
+                            <span>k</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="g">
+                            <span>g</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="f">
+                            <span>f</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="v">
+                            <span>v</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="θ">
+                            <span>θ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ð">
+                            <span>ð</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="s">
+                            <span>s</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="z">
+                            <span>z</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ʃ">
+                            <span>ʃ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="ʒ">
+                            <span>ʒ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="tʃ">
+                            <span>tʃ</span>
+                        </label>
+                        <label class="phonetic-checkbox">
+                            <input type="checkbox" data-sound="dʒ">
+                            <span>dʒ</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="search-controls">
+                    <button id="multi-phonetic-search-btn" class="primary-btn">Search Selected Sounds</button>
+                    <button id="clear-selection-btn" class="secondary-btn">Clear Selection</button>
+                </div>
+            </div>
+            
+            <div id="sound-comparison" class="search-panel">
+                <div class="comparison-header">
+                    <h3>Compare two phonetic sounds and find similar words</h3>
+                    <p>Select two sounds to compare and find words that have similar phonetic structures</p>
+                </div>
+                
+                <div class="comparison-container">
+                    <div class="sound-selector">
+                        <div class="sound-column">
+                            <h4>First Sound</h4>
+                            <select id="first-sound-select" class="sound-select">
+                                <option value="">Select a sound</option>
+                                <optgroup label="Vowels">
+                                    <option value="æ">æ</option>
+                                    <option value="ə">ə</option>
+                                    <option value="ɑ">ɑ</option>
+                                    <option value="ɔ">ɔ</option>
+                                    <option value="ɛ">ɛ</option>
+                                    <option value="ɪ">ɪ</option>
+                                    <option value="i">i</option>
+                                    <option value="ʊ">ʊ</option>
+                                    <option value="u">u</option>
+                                    <option value="ʌ">ʌ</option>
+                                    <option value="e">e</option>
+                                    <option value="ɒ">ɒ</option>
+                                </optgroup>
+                                <optgroup label="Consonants">
+                                    <option value="p">p</option>
+                                    <option value="b">b</option>
+                                    <option value="t">t</option>
+                                    <option value="d">d</option>
+                                    <option value="k">k</option>
+                                    <option value="g">g</option>
+                                    <option value="f">f</option>
+                                    <option value="v">v</option>
+                                    <option value="θ">θ</option>
+                                    <option value="ð">ð</option>
+                                    <option value="s">s</option>
+                                    <option value="z">z</option>
+                                    <option value="ʃ">ʃ</option>
+                                    <option value="ʒ">ʒ</option>
+                                </optgroup>
+                                <optgroup label="Combined Sounds">
+                                    <option value="tʃ">tʃ</option>
+                                    <option value="dʒ">dʒ</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div class="sound-column">
+                            <h4>Second Sound</h4>
+                            <select id="second-sound-select" class="sound-select">
+                                <option value="">Select a sound</option>
+                                <optgroup label="Vowels">
+                                    <option value="æ">æ</option>
+                                    <option value="ə">ə</option>
+                                    <option value="ɑ">ɑ</option>
+                                    <option value="ɔ">ɔ</option>
+                                    <option value="ɛ">ɛ</option>
+                                    <option value="ɪ">ɪ</option>
+                                    <option value="i">i</option>
+                                    <option value="ʊ">ʊ</option>
+                                    <option value="u">u</option>
+                                    <option value="ʌ">ʌ</option>
+                                    <option value="e">e</option>
+                                    <option value="ɒ">ɒ</option>
+                                </optgroup>
+                                <optgroup label="Consonants">
+                                    <option value="p">p</option>
+                                    <option value="b">b</option>
+                                    <option value="t">t</option>
+                                    <option value="d">d</option>
+                                    <option value="k">k</option>
+                                    <option value="g">g</option>
+                                    <option value="f">f</option>
+                                    <option value="v">v</option>
+                                    <option value="θ">θ</option>
+                                    <option value="ð">ð</option>
+                                    <option value="s">s</option>
+                                    <option value="z">z</option>
+                                    <option value="ʃ">ʃ</option>
+                                    <option value="ʒ">ʒ</option>
+                                </optgroup>
+                                <optgroup label="Combined Sounds">
+                                    <option value="tʃ">tʃ</option>
+                                    <option value="dʒ">dʒ</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="compare-sounds-btn" class="primary-btn">Compare Sounds</button>
+                </div>
+                
+                <div class="position-navigation" id="position-navigation" style="display: none;">
+                    <h4>Jump to Position:</h4>
+                    <div class="position-buttons">
+                        <button id="first-position-btn" class="position-btn active">First Position</button>
+                        <button id="middle-position-btn" class="position-btn">Middle Position</button>
+                        <button id="last-position-btn" class="position-btn">Last Position</button>
+                    </div>
+                </div>
+                
+                <div class="comparison-results">
+                    <div class="comparison-column">
+                        <h4 id="first-sound-title">First Sound: <span></span></h4>
+                        <div id="first-sound-results" class="sound-results"></div>
+                    </div>
+                    
+                    <div class="comparison-column">
+                        <h4 id="second-sound-title">Second Sound: <span></span></h4>
+                        <div id="second-sound-results" class="sound-results"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="games" class="search-panel">
+                <div class="games-container">
+                    <h2>Pronunciation Games</h2>
+                    <p>Select a game to practice your pronunciation skills:</p>
+                    
+                    <div class="games-grid" id="games-grid">
+                        <!-- Game cards will be added dynamically -->
+                    </div>
+                    
+                    <div id="game-area"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Data sourced from Oxford Learner's Dictionary</p>
+    </footer>
+    
+    <!-- Core Scripts -->
+    <script src="js/core/dom-elements.js"></script>
+    <script src="js/core/app.js"></script>
+    <script src="js/core/pagination.js"></script>
+    
+    <!-- Feature Scripts -->
+    <script src="js/features/display-results.js"></script>
+    <script src="js/features/word-search.js"></script>
+    <script src="js/features/phonetic-search.js"></script>
+    <script src="js/features/multi-phonetic-search.js"></script>
+    <script src="js/features/sound-comparison.js"></script>
+    
+    <!-- Game Scripts -->
+    <script src="js/games/sound-matching-game.js"></script>
+    <script src="js/games/minimal-pairs-challenge.js"></script>
+    <script src="js/games/sound-position-puzzle.js"></script>
+    <script src="js/games/phonetic-hangman.js"></script>
+    <script src="js/games/sound-sorting.js"></script>
+    <script src="js/games/games-manager.js"></script>
+</body>
+</html>

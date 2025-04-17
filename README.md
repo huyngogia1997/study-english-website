@@ -1,0 +1,70 @@
+# English Study Website
+
+A web application for studying English words and their pronunciations, inspired by the Oxford Learner's Dictionary.
+
+## Features
+
+- **Word Search**: Search for English words and see their definitions, types, and pronunciation
+- **Multi-Phonetic Search**: Search for words containing multiple phonetic sounds simultaneously
+- **Sound Comparison**: Compare two phonetic sounds and find words with similar phonetic structures
+- **Special Phonetic Handling**: Properly handles special cases for combined sounds like "tʃ" and "dʒ"
+- **Audio Playback**: Listen to UK and US pronunciations of words
+- **Oxford Dictionary Integration**: Links to the Oxford Learner's Dictionary for more detailed information
+
+## Technical Details
+
+- **Database**: Uses an online JSON file from GitHub repository (Oxford-5000-words)
+- **Frontend**: Built with HTML, CSS, and vanilla JavaScript
+- **Responsive Design**: Works on both desktop and mobile devices
+- **Modular Code Structure**: Organized into core and features modules
+
+## How to Use
+
+1. **Word Search**:
+   - Enter a word in the search box and click "Search" or press Enter
+   - View the word's details including type, level, and pronunciation
+   - Click on the audio buttons to hear the pronunciation
+
+2. **Phonetic Search**:
+   - Click on the "Phonetic Search" tab
+   - Enter a phonetic sound (e.g., "æ") or click on one of the phonetic buttons
+   - View all words containing that sound in their pronunciation
+
+3. **Multi-Phonetic Search**:
+   - Click on the "Multi-Phonetic Search" tab
+   - Select multiple phonetic sounds using the checkboxes
+   - Choose search mode:
+     - "AND" - find words containing ALL selected sounds
+     - "OR" - find words containing ANY of the selected sounds
+   - Click "Search Selected Sounds" to perform the search
+   - Use "Clear Selection" to reset your choices
+
+4. **Sound Comparison**:
+   - Click on the "Sound Comparison" tab
+   - Select two different phonetic sounds from the dropdown menus
+   - Click "Compare Sounds" to find words with similar phonetic structures
+   - Use the position buttons (First, Middle, Last) to switch between position categories
+   - Words are matched based on where the sounds appear in the word
+
+## Special Phonetic Search Handling
+
+When searching for individual sounds like "t", "ʃ", "d", or "ʒ", the search will not include words with combined sounds like "tʃ" and "dʒ" because the pronunciation of these combined sounds differs from their individual components.
+
+## Getting Started
+
+1. Clone this repository
+2. Open `index.html` in your web browser
+3. Internet connection is required to access the online word database
+
+## Future Improvements
+
+- Add more phonetic sounds to the quick-access buttons
+- Implement pagination for search results ✓
+- Add filtering options (by word type, level, etc.)
+- Improve mobile responsiveness
+- Add a favorites/bookmarks feature
+
+## Credits
+
+- Word data sourced from Oxford Learner's Dictionary
+- Audio files linked from Oxford Learner's Dictionary
