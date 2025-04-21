@@ -10,6 +10,14 @@ async function initApp() {
         // Set up event listeners
         setupEventListeners();
         
+        // Initialize save for later functionality
+        if (typeof setupSaveForLater === 'function') {
+            console.log("Initializing save for later module");
+            setupSaveForLater();
+        } else {
+            console.warn("Save for later module not found");
+        }
+        
         // Initialize games
         if (typeof initGames === 'function') {
             console.log("Initializing games module");
@@ -23,72 +31,60 @@ async function initApp() {
     }
 }
 
-// Load words data from local JSON file
+// Load words data from online repository
 async function loadWordsData() {
     showLoading(true);
     try {
-        // Try to load from local file first
-        const response = await fetch('words.json');
+        // Load from GitHub repository
+        const response = await fetch('https://raw.githubusercontent.com/tyypgzl/Oxford-5000-words/main/full-word.json');
         if (!response.ok) {
-            throw new Error('Failed to load words data from local file');
+            throw new Error('Failed to load words data from GitHub');
         }
         wordsData = await response.json();
-        console.log(`Loaded ${wordsData.length} words from local file`);
+        console.log(`Loaded ${wordsData.length} words from GitHub`);
     } catch (error) {
-        console.error('Error loading local words data:', error);
+        console.error('Error loading words data from GitHub:', error);
+        showError('Failed to load dictionary data. Please try again later.');
         
-        try {
-            // Fallback to GitHub repository
-            const response = await fetch('https://raw.githubusercontent.com/tyypgzl/Oxford-5000-words/main/full-word.json');
-            if (!response.ok) {
-                throw new Error('Failed to load words data from GitHub');
-            }
-            wordsData = await response.json();
-            console.log(`Loaded ${wordsData.length} words from GitHub`);
-        } catch (githubError) {
-            console.error('Error loading words data from GitHub:', githubError);
-            showError('Failed to load dictionary data. Please try again later.');
-            
-            // Create some sample data for testing if both fetches fail
-            wordsData = [
-                {
-                    "value": {
-                        "word": "example",
-                        "type": "noun",
-                        "level": "A1",
-                        "phonetics": {
-                            "uk": "ɪɡˈzɑːmpl",
-                            "us": "ɪɡˈzæmpl"
-                        },
-                        "uk": {
-                            "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/e/exa/examp/example__gb_1.mp3"
-                        },
-                        "us": {
-                            "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/us_pron/e/exa/examp/example__us_1.mp3"
-                        },
-                        "href": "https://www.oxfordlearnersdictionaries.com/definition/english/example"
-                    }
-                },
-                {
-                    "value": {
-                        "word": "teacher",
-                        "type": "noun",
-                        "level": "A1",
-                        "phonetics": {
-                            "uk": "ˈtiːtʃə(r)",
-                            "us": "ˈtiːtʃər"
-                        },
-                        "uk": {
-                            "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/t/tea/teach/teacher__gb_1.mp3"
-                        },
-                        "us": {
-                            "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/us_pron/t/tea/teach/teacher__us_1.mp3"
-                        },
-                        "href": "https://www.oxfordlearnersdictionaries.com/definition/english/teacher"
-                    }
+        // Create some sample data for testing if fetch fails
+        wordsData = [
+            {
+                "value": {
+                    "word": "example",
+                    "type": "noun",
+                    "level": "A1",
+                    "phonetics": {
+                        "uk": "ɪɡˈzɑːmpl",
+                        "us": "ɪɡˈzæmpl"
+                    },
+                    "uk": {
+                        "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/e/exa/examp/example__gb_1.mp3"
+                    },
+                    "us": {
+                        "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/us_pron/e/exa/examp/example__us_1.mp3"
+                    },
+                    "href": "https://www.oxfordlearnersdictionaries.com/definition/english/example"
                 }
-            ];
-        }
+            },
+            {
+                "value": {
+                    "word": "teacher",
+                    "type": "noun",
+                    "level": "A1",
+                    "phonetics": {
+                        "uk": "ˈtiːtʃə(r)",
+                        "us": "ˈtiːtʃər"
+                    },
+                    "uk": {
+                        "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/uk_pron/t/tea/teach/teacher__gb_1.mp3"
+                    },
+                    "us": {
+                        "mp3": "https://www.oxfordlearnersdictionaries.com/media/english/us_pron/t/tea/teach/teacher__us_1.mp3"
+                    },
+                    "href": "https://www.oxfordlearnersdictionaries.com/definition/english/teacher"
+                }
+            }
+        ];
     } finally {
         showLoading(false);
     }

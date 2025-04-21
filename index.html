@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/speech-recognition.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/mobile-tip.css">
+    <link rel="stylesheet" href="css/save-for-later.css">
 </head>
 <body>
     <header>
@@ -22,6 +23,7 @@
             <button class="tab-btn" data-tab="phonetic-search">Phonetic Search</button>
             <button class="tab-btn" data-tab="multi-phonetic-search">Multi-Phonetic Search</button>
             <button class="tab-btn" data-tab="sound-comparison">Sound Comparison</button>
+            <button class="tab-btn" data-tab="saved-words">Saved Words <span id="saved-words-count" class="saved-words-count">0</span></button>
             <button class="tab-btn" data-tab="games">Games</button>
         </div>
         
@@ -455,6 +457,27 @@
                 </div>
             </div>
             
+            <div id="saved-words" class="search-panel">
+                <div class="saved-words-header">
+                    <h2>Saved Words <span id="saved-words-count-header" class="saved-words-count">0</span></h2>
+                    <div class="saved-words-actions">
+                        <button id="export-saved-words" class="secondary-btn">Export to CSV</button>
+                        <button id="clear-saved-words" class="danger-btn">Clear All</button>
+                    </div>
+                </div>
+                <div class="sort-container">
+                    <label for="saved-words-sort-select">Sort by:</label>
+                    <select id="saved-words-sort-select" class="sort-select">
+                        <option value="none">None</option>
+                        <option value="level-asc">Level (A1 to C2)</option>
+                        <option value="level-desc">Level (C2 to A1)</option>
+                        <option value="alpha-asc">Alphabetical (A-Z)</option>
+                        <option value="alpha-desc">Alphabetical (Z-A)</option>
+                    </select>
+                </div>
+                <div id="saved-words-results"></div>
+            </div>
+            
             <div id="games" class="search-panel">
                 <div class="games-container">
                     <h2>Pronunciation Games</h2>
@@ -494,6 +517,7 @@
     <script src="js/features/sound-comparison.js"></script>
     <script src="js/features/speech-recognition.js"></script>
     <script src="js/features/mobile-optimization.js"></script>
+    <script src="js/features/save-for-later.js"></script>
     
     <!-- Game Scripts -->
     <script src="js/games/sound-matching-game.js"></script>

@@ -23,3 +23,11 @@ const firstSoundTitle = document.getElementById('first-sound-title').querySelect
 const secondSoundTitle = document.getElementById('second-sound-title').querySelector('span');
 const firstSoundResults = document.getElementById('first-sound-results');
 const secondSoundResults = document.getElementById('second-sound-results');
+
+// Saved words elements
+const savedWordsResults = document.getElementById('saved-words-results');
+const savedWordsCount = document.getElementById('saved-words-count');
+const savedWordsCountHeader = document.getElementById('saved-words-count-header');
+const exportSavedWordsBtn = document.getElementById('export-saved-words');
+const clearSavedWordsBtn = document.getElementById('clear-saved-words');
+const savedWordsSortSelect = document.getElementById('saved-words-sort-select');
