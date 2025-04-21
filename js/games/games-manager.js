@@ -107,13 +107,18 @@ function startGame(gameId) {
     // Add back button
     gameArea.innerHTML = `
         <div class="game-header">
-            <button id="back-to-games" class="back-btn">← Back to Games</button>
+            <button id="back-to-games" class="back-btn">← Back</button>
             <h2>${game.name}</h2>
         </div>
         <div id="game-content"></div>
     `;
     
     // Hide game menu
+    const gamesContainer = document.querySelector('.games-container h2');
+    if (gamesContainer) {
+        gamesContainer.style.display = 'none';
+    }
+    
     const gameCards = document.querySelectorAll('.game-card');
     gameCards.forEach(card => {
         card.style.display = 'none';
@@ -146,6 +151,12 @@ function showGameMenu() {
     gameCards.forEach(card => {
         card.style.display = 'block';
     });
+    
+    // Show games container title
+    const gamesContainer = document.querySelector('.games-container h2');
+    if (gamesContainer) {
+        gamesContainer.style.display = 'block';
+    }
     
     // Clear game area
     const gameArea = document.getElementById('game-area');
