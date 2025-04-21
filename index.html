@@ -32,6 +32,16 @@
                     <input type="text" id="word-input" placeholder="Enter a word...">
                     <button id="word-search-btn" class="primary-btn">Search</button>
                 </div>
+                <div class="sort-container">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="none">None</option>
+                        <option value="level-asc">Level (A1 to C2)</option>
+                        <option value="level-desc">Level (C2 to A1)</option>
+                        <option value="alpha-asc">Alphabetical (A-Z)</option>
+                        <option value="alpha-desc">Alphabetical (Z-A)</option>
+                    </select>
+                </div>
             </div>
             
             <div id="phonetic-search" class="search-panel">
@@ -39,6 +49,16 @@
                 <div class="search-container">
                     <input type="text" id="phonetic-input" placeholder="Enter a phonetic sound...">
                     <button id="phonetic-search-btn" class="primary-btn">Search</button>
+                </div>
+                <div class="sort-container">
+                    <label for="phonetic-sort-select">Sort by:</label>
+                    <select id="phonetic-sort-select" class="sort-select">
+                        <option value="none">None</option>
+                        <option value="level-asc">Level (A1 to C2)</option>
+                        <option value="level-desc">Level (C2 to A1)</option>
+                        <option value="alpha-asc">Alphabetical (A-Z)</option>
+                        <option value="alpha-desc">Alphabetical (Z-A)</option>
+                    </select>
                 </div>
                 
                 <div class="phonetic-buttons">
@@ -118,6 +138,17 @@
                 
                 <div class="selected-sounds">
                     <p>Selected sounds: <span id="selected-sounds-display">None</span></p>
+                </div>
+                
+                <div class="sort-container">
+                    <label for="multi-phonetic-sort-select">Sort by:</label>
+                    <select id="multi-phonetic-sort-select" class="sort-select">
+                        <option value="none">None</option>
+                        <option value="level-asc">Level (A1 to C2)</option>
+                        <option value="level-desc">Level (C2 to A1)</option>
+                        <option value="alpha-asc">Alphabetical (A-Z)</option>
+                        <option value="alpha-desc">Alphabetical (Z-A)</option>
+                    </select>
                 </div>
                 
                 <div class="phonetic-checkboxes">

@@ -12,10 +12,55 @@ let paginatedResults = {
     }
 };
 
+// Sort results by level or alphabetically
+function sortResults(results, sortBy) {
+    const levelOrder = {
+        'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1': 5, 'C2': 6
+    };
+    
+    return [...results].sort((a, b) => {
+        const wordA = a.value;
+        const wordB = b.value;
+        
+        switch(sortBy) {
+            case 'level-asc':
+                // Sort by level (A1 to C2)
+                const levelA = wordA.level || 'Z'; // If no level, put at the end
+                const levelB = wordB.level || 'Z';
+                return (levelOrder[levelA] || 999) - (levelOrder[levelB] || 999);
+                
+            case 'level-desc':
+                // Sort by level (C2 to A1)
+                const levelADesc = wordA.level || '';
+                const levelBDesc = wordB.level || '';
+                return (levelOrder[levelBDesc] || 0) - (levelOrder[levelADesc] || 0);
+                
+            case 'alpha-asc':
+                // Sort alphabetically (A to Z)
+                return wordA.word.localeCompare(wordB.word);
+                
+            case 'alpha-desc':
+                // Sort alphabetically (Z to A)
+                return wordB.word.localeCompare(wordA.word);
+                
+            default:
+                return 0;
+        }
+    });
+}
+
 // Display paginated results for word and phonetic searches
 function displayPaginatedResults(results, container) {
     // Store the full results for pagination
     paginatedResults.word = results;
+    
+    // Apply sorting if selected
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect && sortSelect.value !== 'none') {
+        results = sortResults(results, sortSelect.value);
+        // Update stored results with sorted version
+        paginatedResults.word = results;
+    }
     
     // Calculate total pages
     const totalPages = Math.ceil(results.length / itemsPerPage);

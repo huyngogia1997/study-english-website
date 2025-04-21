@@ -110,15 +110,33 @@ function searchByMultiplePhonetics(sounds) {
         paginatedResults.multiPhonetic = results;
     }
     
-    // Display results
-    if (typeof displayResultsPage === 'function' && typeof createPaginationControls === 'function') {
-        // Use pagination if available
-        displayResultsPage(1, results, resultsContainer);
-        const totalPages = Math.ceil(results.length / (typeof itemsPerPage !== 'undefined' ? itemsPerPage : 10));
-        createPaginationControls(totalPages, resultsContainer, 'multiPhonetic');
+    // Apply sorting if selected
+    const sortSelect = document.getElementById('multi-phonetic-sort-select');
+    if (sortSelect && sortSelect.value !== 'none') {
+        const sortedResults = sortResults(results, sortSelect.value);
+        paginatedResults.multiPhonetic = sortedResults;
+        
+        // Display results
+        if (typeof displayResultsPage === 'function' && typeof createPaginationControls === 'function') {
+            // Use pagination if available
+            displayResultsPage(1, sortedResults, resultsContainer);
+            const totalPages = Math.ceil(sortedResults.length / (typeof itemsPerPage !== 'undefined' ? itemsPerPage : 10));
+            createPaginationControls(totalPages, resultsContainer, 'multiPhonetic');
+        } else {
+            // Fallback to regular display
+            displayResults(sortedResults);
+        }
     } else {
-        // Fallback to regular display
-        displayResults(results);
+        // Display results without sorting
+        if (typeof displayResultsPage === 'function' && typeof createPaginationControls === 'function') {
+            // Use pagination if available
+            displayResultsPage(1, results, resultsContainer);
+            const totalPages = Math.ceil(results.length / (typeof itemsPerPage !== 'undefined' ? itemsPerPage : 10));
+            createPaginationControls(totalPages, resultsContainer, 'multiPhonetic');
+        } else {
+            // Fallback to regular display
+            displayResults(results);
+        }
     }
     
     showLoading(false);
