@@ -122,9 +122,9 @@ html, body {
 }
 
 .record-button {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 50% !important;
+    width: 100% !important;
+    /* height: 40px !important; */
+    /* border-radius: 50% !important; */
     background-color: #e74c3c !important;
     color: white !important;
     border: none !important;

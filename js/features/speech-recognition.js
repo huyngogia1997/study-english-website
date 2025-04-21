@@ -27,7 +27,7 @@ function createSpeechRecognitionUI() {
     header.className = 'speech-header';
     
     const title = document.createElement('h3');
-    title.textContent = 'Speech Practice';
+    title.textContent = 'Practice';
     title.className = 'speech-title';
     
     // Create minimize/expand button
@@ -50,7 +50,7 @@ function createSpeechRecognitionUI() {
     const statusIndicator = document.createElement('div');
     statusIndicator.id = 'speech-status';
     statusIndicator.className = 'speech-status';
-    statusIndicator.textContent = 'Ready to record';
+    statusIndicator.textContent = 'Ready';
     
     // Create recognized word display (only for Chrome)
     if (isChrome) {
@@ -116,20 +116,20 @@ function createSpeechRecognitionUI() {
     // Create keyboard shortcut info
     const keyboardInfo = document.createElement('div');
     keyboardInfo.className = 'keyboard-info';
-    keyboardInfo.innerHTML = '<span class="keyboard-icon">⌨️</span> Press <strong>SPACE</strong> to record';
+    keyboardInfo.innerHTML = '<span class="keyboard-icon">⌨️</span> <strong>SPACE</strong> to record';
     
     // Add permission button
     const permissionButton = document.createElement('button');
     permissionButton.id = 'permission-button';
     permissionButton.className = 'permission-button';
-    permissionButton.textContent = 'Grant Microphone Access';
+    permissionButton.textContent = 'Grant Mic Access';
     permissionButton.onclick = requestMicrophonePermission;
     
     // Add browser-specific message
     if (!isChrome) {
         const browserNote = document.createElement('div');
         browserNote.className = 'browser-note';
-        browserNote.textContent = 'Note: Speech recognition is only available in Chrome. In this browser, you can record and play back your speech.';
+        browserNote.textContent = 'Note: Speech recognition only in Chrome. Record and playback available here.';
         contentContainer.appendChild(browserNote);
     }
     
@@ -147,13 +147,10 @@ function createSpeechRecognitionUI() {
     // Add container to the page
     document.body.appendChild(speechContainer);
     
-    // Check if we should start minimized on mobile
-    if (window.innerWidth < 768) {
-        // Start minimized on mobile
-        setTimeout(() => {
-            toggleSpeechContainer();
-        }, 1000);
-    }
+    // Always start minimized
+    setTimeout(() => {
+        toggleSpeechContainer();
+    }, 1000);
     
     console.log("Speech recognition UI created");
 }
@@ -604,7 +601,7 @@ function updateStatus(message, isRec = false) {
     console.log("Updating status:", message, isRec);
     
     if (isRec) {
-        statusElement.innerHTML = '<span class="recording-indicator"></span> ' + message;
+        statusElement.innerHTML = '<span class="recording-indicator"></span> Recording';
         statusElement.classList.add('recording');
     } else {
         statusElement.textContent = message;
