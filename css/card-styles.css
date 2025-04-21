@@ -1,0 +1,259 @@
+/* Enhanced Card Styles for Word Results */
+
+.word-result {
+  position: relative;
+  background-color: var(--background-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.word-result::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.word-result:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.word-result h3 {
+  color: var(--primary-dark);
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.word-result h3::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  margin-left: 0.5rem;
+}
+
+.word-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.word-type {
+  background-color: var(--primary-light);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.word-type::before {
+  content: "📝";
+  font-size: 0.875rem;
+}
+
+.word-level {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.word-level::before {
+  content: "🏆";
+  font-size: 0.875rem;
+}
+
+.phonetics {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--background-light);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--primary-light);
+}
+
+.uk-phonetic, .us-phonetic {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.uk-phonetic::before {
+  content: "🇬🇧";
+  font-size: 1rem;
+}
+
+.us-phonetic::before {
+  content: "🇺🇸";
+  font-size: 1rem;
+}
+
+.audio-btn {
+  background-color: var(--primary-light);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.audio-btn::before {
+  content: "🔊";
+  font-size: 0.875rem;
+}
+
+.audio-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.oxford-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  transition: all 0.2s ease;
+}
+
+.oxford-link::before {
+  content: "📚";
+  font-size: 1rem;
+}
+
+.oxford-link:hover {
+  color: var(--primary-dark);
+  transform: translateX(5px);
+}
+
+/* Level-specific styling */
+.word-result[data-level="A1"]::before {
+  background-color: #4ade80; /* Green for beginner */
+}
+
+.word-result[data-level="A2"]::before {
+  background-color: #34d399;
+}
+
+.word-result[data-level="B1"]::before {
+  background-color: #fbbf24; /* Yellow for intermediate */
+}
+
+.word-result[data-level="B2"]::before {
+  background-color: #f59e0b;
+}
+
+.word-result[data-level="C1"]::before {
+  background-color: #f87171; /* Red for advanced */
+}
+
+.word-result[data-level="C2"]::before {
+  background-color: #ef4444;
+}
+
+/* Word type specific styling */
+.word-type[data-type="noun"] {
+  background-color: #4361ee;
+}
+
+.word-type[data-type="verb"] {
+  background-color: #3b82f6;
+}
+
+.word-type[data-type="adjective"] {
+  background-color: #8b5cf6;
+}
+
+.word-type[data-type="adverb"] {
+  background-color: #ec4899;
+}
+
+.word-type[data-type="preposition"] {
+  background-color: #10b981;
+}
+
+.word-type[data-type="conjunction"] {
+  background-color: #f59e0b;
+}
+
+.word-type[data-type="pronoun"] {
+  background-color: #6366f1;
+}
+
+.word-type[data-type="interjection"] {
+  background-color: #f43f5e;
+}
+
+/* Card hover effects */
+.word-result:hover .phonetics {
+  border-left-color: var(--accent-color);
+}
+
+.word-result:hover h3::after {
+  background-color: var(--accent-color);
+}
+
+/* Saved word indicator */
+.word-result.saved::after {
+  content: "📌";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Animation for new results */
+.word-result {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .word-result {
+    padding: 1.25rem;
+  }
+  
+  .word-result h3 {
+    font-size: 1.25rem;
+  }
+  
+  .phonetics {
+    padding: 0.75rem;
+  }
+}

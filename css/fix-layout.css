@@ -1,0 +1,197 @@
+/* Fix layout issues */
+
+/* Reset container styles */
+#results {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+}
+
+/* Fix results wrapper */
+.results-wrapper {
+    width: 100% !important;
+    max-width: 800px !important; /* Limit max width for better readability */
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 auto !important; /* Center the wrapper */
+    display: block !important;
+}
+
+/* Fix word result cards */
+.word-result {
+    width: 100% !important;
+    max-width: 800px !important; /* Limit max width for better readability */
+    box-sizing: border-box !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+}
+
+/* Fix content container */
+.content {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+}
+
+/* Fix main container */
+main {
+    width: 100% !important;
+    max-width: 1200px !important; /* Match the original max-width */
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    margin: 0 auto !important;
+}
+
+/* Fix body and html */
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Fix pagination controls */
+.pagination-controls {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+    position: static !important;
+}
+
+/* Fix search panels */
+.search-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Fix tabs */
+.tabs {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+/* Fix any flex issues */
+.word-details, .uk-phonetic, .us-phonetic {
+    flex-wrap: wrap !important;
+}
+
+/* Fix any overflow issues */
+* {
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+}
+
+/* Fix Speech Practice section */
+#speech-recognition {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+}
+
+.record-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 20px auto !important;
+}
+
+.record-button {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 50% !important;
+    background-color: #e74c3c !important;
+    color: white !important;
+    border: none !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+}
+
+.record-button:hover {
+    background-color: #c0392b !important;
+}
+
+.record-button:active {
+    transform: scale(0.95) !important;
+}
+
+.record-instructions {
+    text-align: center !important;
+    margin: 20px 0 !important;
+    font-size: 16px !important;
+}
+
+.recognition-result {
+    margin-top: 20px !important;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+/* Restore original styling for specific elements */
+.loading {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 1000 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+/* Restore original font sizes */
+h3 {
+    font-size: 1.5rem !important;
+}
+
+h4 {
+    font-size: 1.2rem !important;
+}
+
+/* Restore original button styling */
+button {
+    cursor: pointer !important;
+}
+
+/* Restore original link styling */
+a {
+    text-decoration: none !important;
+    color: #3498db !important;
+}
+
+a:hover {
+    text-decoration: underline !important;
+}

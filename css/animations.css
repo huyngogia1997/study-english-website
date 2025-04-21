@@ -1,0 +1,242 @@
+/* Animations for English Study Website */
+
+/* Fade In */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Fade In Down */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-down {
+  animation: fadeInDown 0.5s ease-out;
+}
+
+/* Scale In */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Slide In Right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Slide In Left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* Pulse */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+/* Bounce */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+/* Spin */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.2) 50%, 
+    rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Highlight */
+@keyframes highlight {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: rgba(67, 97, 238, 0.2);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight {
+  animation: highlight 2s ease-out;
+}
+
+/* Apply animations to specific elements */
+.word-result {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.word-result:nth-child(1) { animation-delay: 0.1s; }
+.word-result:nth-child(2) { animation-delay: 0.2s; }
+.word-result:nth-child(3) { animation-delay: 0.3s; }
+.word-result:nth-child(4) { animation-delay: 0.4s; }
+.word-result:nth-child(5) { animation-delay: 0.5s; }
+.word-result:nth-child(6) { animation-delay: 0.6s; }
+.word-result:nth-child(7) { animation-delay: 0.7s; }
+.word-result:nth-child(8) { animation-delay: 0.8s; }
+.word-result:nth-child(9) { animation-delay: 0.9s; }
+.word-result:nth-child(10) { animation-delay: 1s; }
+
+.search-panel.active {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.save-confirmation {
+  animation: fadeInUp 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Button hover effects */
+.primary-btn, .secondary-btn, .danger-btn, .save-btn {
+  transition: all 0.2s ease;
+}
+
+.primary-btn:hover, .secondary-btn:hover, .danger-btn:hover, .save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.primary-btn:active, .secondary-btn:active, .danger-btn:active, .save-btn:active {
+  transform: translateY(0);
+}
+
+/* Tab transition */
+.tab-btn {
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Phonetic button effects */
+.phonetic-btn {
+  transition: all 0.2s ease;
+}
+
+.phonetic-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.phonetic-btn:active {
+  transform: translateY(0);
+}
