@@ -563,36 +563,74 @@ header p {
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
+  /* Override dark mode preferences to always use light theme */
   :root {
     --primary-color: #4361ee;
     --primary-light: #4895ef;
     --primary-dark: #3f37c9;
     --secondary-color: #4cc9f0;
-    --text-dark: #f1f5f9;
-    --text-light: #cbd5e1;
-    --background-light: #1e293b;
-    --background-white: #0f172a;
-    --background-card: #1e293b;
-    --border-color: #334155;
+    --accent-color: #f72585;
+    --success-color: #4ade80;
+    --warning-color: #fbbf24;
+    --danger-color: #f87171;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --background-light: #f8fafc;
+    --background-white: #ffffff;
+    --background-card: #ffffff;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  body {
+    background-color: var(--background-light);
+    color: var(--text-dark);
   }
   
   .word-result {
     background-color: var(--background-card);
+    border: 1px solid var(--border-color);
   }
   
   .phonetics {
-    background-color: #0f172a;
+    background-color: var(--background-light);
   }
   
   .search-container input,
   .sort-select {
-    background-color: #0f172a;
+    background-color: var(--background-white);
     color: var(--text-dark);
     border-color: var(--border-color);
   }
   
   .phonetic-btn {
-    background-color: #1e293b;
+    background-color: var(--background-white);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+  }
+  
+  .tab-btn {
+    background-color: var(--background-white);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+  }
+  
+  .tab-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  h1 {
+    color: var(--primary-dark);
+  }
+  
+  h2 {
+    color: var(--primary-color);
+  }
+  
+  h3 {
     color: var(--text-dark);
   }
 }
