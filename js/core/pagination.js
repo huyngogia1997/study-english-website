@@ -12,6 +12,21 @@ let paginatedResults = {
     }
 };
 
+// Reset pagination data
+function resetPaginationData() {
+    paginatedResults = {
+        word: [],
+        phonetic: [],
+        multiPhonetic: [],
+        soundComparison: {
+            first: { firstSound: [], secondSound: [] },
+            middle: { firstSound: [], secondSound: [] },
+            last: { firstSound: [], secondSound: [] }
+        }
+    };
+    currentPage = 1;
+}
+
 // Sort results by level or alphabetically
 function sortResults(results, sortBy) {
     const levelOrder = {
@@ -233,7 +248,28 @@ function handlePageChange(resultType, container) {
 
 // Create pagination controls for sound comparison
 function createSoundComparisonPaginationControls(totalPages, firstContainer, secondContainer, positionType) {
-    if (!firstContainer || !secondContainer || totalPages <= 1) return;
+    console.log(`Creating pagination controls for sound comparison: ${positionType}, total pages: ${totalPages}`);
+    
+    if (!firstContainer || !secondContainer) {
+        console.error('Containers not provided for pagination controls');
+        return;
+    }
+    
+    if (totalPages <= 1) {
+        console.log('Only one page of results, skipping pagination controls');
+        return;
+    }
+    
+    // Remove any existing pagination controls
+    const existingFirstPagination = firstContainer.querySelector('.pagination-controls');
+    if (existingFirstPagination) {
+        existingFirstPagination.remove();
+    }
+    
+    const existingSecondPagination = secondContainer.querySelector('.pagination-controls');
+    if (existingSecondPagination) {
+        existingSecondPagination.remove();
+    }
     
     // Create pagination for first sound container
     const firstPaginationContainer = document.createElement('div');
@@ -264,27 +300,46 @@ function createSoundComparisonPaginationControls(totalPages, firstContainer, sec
     // Add to container
     firstContainer.appendChild(firstPaginationContainer);
     
-    // Create pagination for second sound container (clone of first)
-    const secondPaginationContainer = firstPaginationContainer.cloneNode(true);
+    // Create pagination for second sound container
+    const secondPaginationContainer = document.createElement('div');
+    secondPaginationContainer.className = 'pagination-controls';
+    
+    // Previous button for second container
+    const secondPrevButton = document.createElement('button');
+    secondPrevButton.className = 'pagination-btn prev-btn';
+    secondPrevButton.textContent = '← Previous';
+    secondPrevButton.disabled = true; // Start at page 1
+    
+    // Next button for second container
+    const secondNextButton = document.createElement('button');
+    secondNextButton.className = 'pagination-btn next-btn';
+    secondNextButton.textContent = 'Next →';
+    secondNextButton.disabled = totalPages === 1;
+    
+    // Page indicator for second container
+    const secondPageIndicator = document.createElement('span');
+    secondPageIndicator.className = 'page-indicator';
+    secondPageIndicator.textContent = `Page 1 of ${totalPages}`;
+    
+    // Assemble pagination controls for second container
+    secondPaginationContainer.appendChild(secondPrevButton);
+    secondPaginationContainer.appendChild(secondPageIndicator);
+    secondPaginationContainer.appendChild(secondNextButton);
+    
+    // Add to second container
     secondContainer.appendChild(secondPaginationContainer);
     
-    // Set up event listeners for first container
+    // Set up event listeners for first container - INDEPENDENT PAGINATION
     let currentPageFirst = 1;
+    let currentPageSecond = 1;
+    
     firstPrevButton.addEventListener('click', () => {
         if (currentPageFirst > 1) {
             currentPageFirst--;
             updateSoundComparisonPage(positionType, 'firstSound', currentPageFirst);
             firstPageIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
             firstPrevButton.disabled = currentPageFirst === 1;
-            firstNextButton.disabled = false;
-            
-            // Sync second container pagination
-            const secondPrevBtn = secondPaginationContainer.querySelector('.prev-btn');
-            const secondNextBtn = secondPaginationContainer.querySelector('.next-btn');
-            const secondIndicator = secondPaginationContainer.querySelector('.page-indicator');
-            secondIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            secondPrevBtn.disabled = currentPageFirst === 1;
-            secondNextBtn.disabled = false;
+            firstNextButton.disabled = currentPageFirst === totalPages;
         }
     });
     
@@ -293,75 +348,82 @@ function createSoundComparisonPaginationControls(totalPages, firstContainer, sec
             currentPageFirst++;
             updateSoundComparisonPage(positionType, 'firstSound', currentPageFirst);
             firstPageIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            firstPrevButton.disabled = false;
-            firstNextButton.disabled = currentPageFirst === totalPages;
-            
-            // Sync second container pagination
-            const secondPrevBtn = secondPaginationContainer.querySelector('.prev-btn');
-            const secondNextBtn = secondPaginationContainer.querySelector('.next-btn');
-            const secondIndicator = secondPaginationContainer.querySelector('.page-indicator');
-            secondIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            secondPrevBtn.disabled = false;
-            secondNextBtn.disabled = currentPageFirst === totalPages;
-        }
-    });
-    
-    // Set up event listeners for second container
-    const secondPrevBtn = secondPaginationContainer.querySelector('.prev-btn');
-    const secondNextBtn = secondPaginationContainer.querySelector('.next-btn');
-    const secondIndicator = secondPaginationContainer.querySelector('.page-indicator');
-    
-    secondPrevBtn.addEventListener('click', () => {
-        if (currentPageFirst > 1) {
-            currentPageFirst--;
-            updateSoundComparisonPage(positionType, 'secondSound', currentPageFirst);
-            secondIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            secondPrevBtn.disabled = currentPageFirst === 1;
-            secondNextBtn.disabled = false;
-            
-            // Sync first container pagination
-            firstPageIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
             firstPrevButton.disabled = currentPageFirst === 1;
-            firstNextButton.disabled = false;
-        }
-    });
-    
-    secondNextBtn.addEventListener('click', () => {
-        if (currentPageFirst < totalPages) {
-            currentPageFirst++;
-            updateSoundComparisonPage(positionType, 'secondSound', currentPageFirst);
-            secondIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            secondPrevBtn.disabled = false;
-            secondNextBtn.disabled = currentPageFirst === totalPages;
-            
-            // Sync first container pagination
-            firstPageIndicator.textContent = `Page ${currentPageFirst} of ${totalPages}`;
-            firstPrevButton.disabled = false;
             firstNextButton.disabled = currentPageFirst === totalPages;
         }
     });
+    
+    // Set up event listeners for second container - INDEPENDENT PAGINATION
+    secondPrevButton.addEventListener('click', () => {
+        if (currentPageSecond > 1) {
+            currentPageSecond--;
+            updateSoundComparisonPage(positionType, 'secondSound', currentPageSecond);
+            secondPageIndicator.textContent = `Page ${currentPageSecond} of ${totalPages}`;
+            secondPrevButton.disabled = currentPageSecond === 1;
+            secondNextButton.disabled = currentPageSecond === totalPages;
+        }
+    });
+    
+    secondNextButton.addEventListener('click', () => {
+        if (currentPageSecond < totalPages) {
+            currentPageSecond++;
+            updateSoundComparisonPage(positionType, 'secondSound', currentPageSecond);
+            secondPageIndicator.textContent = `Page ${currentPageSecond} of ${totalPages}`;
+            secondPrevButton.disabled = currentPageSecond === 1;
+            secondNextButton.disabled = currentPageSecond === totalPages;
+        }
+    });
+    
+    console.log('Independent pagination controls created successfully');
 }
 
 // Update sound comparison page
 function updateSoundComparisonPage(positionType, soundType, page) {
+    console.log(`Updating sound comparison page: ${positionType}, ${soundType}, page ${page}`);
+    
     // Calculate start and end indices
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     
     // Get the current page of results
     const results = paginatedResults.soundComparison[positionType][soundType];
+    
+    if (!results || results.length === 0) {
+        console.error(`No results found for ${positionType} position, ${soundType}`);
+        return;
+    }
+    
     const pageResults = results.slice(startIndex, endIndex);
+    console.log(`Showing results ${startIndex+1} to ${Math.min(endIndex, results.length)} of ${results.length}`);
     
     // Get the container to update
     const containerId = `${positionType}-position-${soundType === 'firstSound' ? 'first' : 'second'}-sound`;
     const container = document.getElementById(containerId);
     
-    if (!container) return;
+    if (!container) {
+        console.error(`Container not found: ${containerId}`);
+        return;
+    }
     
-    // Keep the heading
-    const heading = container.querySelector('h3');
-    const headingText = heading ? heading.textContent : `${positionType.charAt(0).toUpperCase() + positionType.slice(1)} Position`;
-    
-    // Update the container with new results
-    container.innerHTML = `<h3>${headingText}</h3>` + createComparisonWordsHtml(pageResults);
+    try {
+        // Keep the heading
+        const heading = container.querySelector('h3');
+        const headingText = heading ? heading.textContent : `${positionType.charAt(0).toUpperCase() + positionType.slice(1)} Position`;
+        
+        // Get existing pagination controls to preserve them
+        const paginationControls = container.querySelector('.pagination-controls');
+        
+        // Update the container with new results but preserve pagination
+        const newContent = `<h3>${headingText}</h3>` + createComparisonWordsHtml(pageResults);
+        container.innerHTML = newContent;
+        
+        // Re-append pagination controls if they existed
+        if (paginationControls) {
+            container.appendChild(paginationControls);
+        }
+        
+        console.log(`Successfully updated ${soundType} for ${positionType} position, page ${page}`);
+    } catch (error) {
+        console.error('Error updating sound comparison page:', error);
+    }
 }

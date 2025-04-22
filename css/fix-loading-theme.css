@@ -12,7 +12,6 @@
     border-radius: 8px !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
     display: flex !important;
-    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     width: auto !important;
@@ -26,7 +25,6 @@
     border-radius: 50% !important;
     border-left-color: #3498db !important;
     animation: spin 1s linear infinite !important;
-    margin-bottom: 10px !important;
 }
 
 @keyframes spin {
@@ -36,6 +34,8 @@
 
 .hidden {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }
 
 /* RESTORE THEME SWITCHER */

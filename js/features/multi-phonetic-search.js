@@ -3,19 +3,26 @@
 // Set up multi-phonetic search event listeners
 function setupMultiPhoneticSearch() {
     // Check if elements exist
-    if (!multiPhoneticSearchBtn || !clearSelectionBtn || !selectedSoundsDisplay || !phoneticCheckboxes) {
+    if (!multiPhoneticSearchBtn || !clearSelectionBtn || !selectedSoundsDisplay) {
         console.error('Multi-phonetic search elements not found');
+        return;
+    }
+    
+    // Get all phonetic checkboxes
+    const phoneticCheckboxes = document.querySelectorAll('.phonetic-checkbox input[type="checkbox"]');
+    if (!phoneticCheckboxes || phoneticCheckboxes.length === 0) {
+        console.error('No phonetic checkboxes found');
         return;
     }
     
     // Update selected sounds display when checkboxes are clicked
     phoneticCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateSelectedSoundsDisplay);
+        checkbox.addEventListener('change', () => updateSelectedSoundsDisplay(phoneticCheckboxes));
     });
     
     // Search button click handler
     multiPhoneticSearchBtn.addEventListener('click', () => {
-        const selectedSounds = getSelectedSounds();
+        const selectedSounds = getSelectedSounds(phoneticCheckboxes);
         if (selectedSounds.length > 0) {
             searchByMultiplePhonetics(selectedSounds);
         } else {
@@ -28,12 +35,12 @@ function setupMultiPhoneticSearch() {
         phoneticCheckboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
-        updateSelectedSoundsDisplay();
+        updateSelectedSoundsDisplay(phoneticCheckboxes);
     });
 }
 
 // Get all currently selected sounds
-function getSelectedSounds() {
+function getSelectedSounds(phoneticCheckboxes) {
     const selectedSounds = [];
     phoneticCheckboxes.forEach(checkbox => {
         if (checkbox.checked) {
@@ -44,8 +51,8 @@ function getSelectedSounds() {
 }
 
 // Update the display of selected sounds
-function updateSelectedSoundsDisplay() {
-    const selectedSounds = getSelectedSounds();
+function updateSelectedSoundsDisplay(phoneticCheckboxes) {
+    const selectedSounds = getSelectedSounds(phoneticCheckboxes);
     if (selectedSoundsDisplay) {
         if (selectedSounds.length === 0) {
             selectedSoundsDisplay.textContent = 'None';

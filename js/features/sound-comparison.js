@@ -2,6 +2,13 @@
 
 // Set up sound comparison event listeners
 function setupSoundComparison() {
+    if (!compareSoundsBtn || !firstSoundSelect || !secondSoundSelect) {
+        console.error('Sound comparison elements not found');
+        return;
+    }
+    
+    console.log('Setting up sound comparison event listeners');
+    
     const positionNavigation = document.getElementById('position-navigation');
     
     compareSoundsBtn.addEventListener('click', () => {
@@ -21,8 +28,30 @@ function setupSoundComparison() {
         compareSounds(firstSound, secondSound);
         
         // Show position navigation buttons after search
-        positionNavigation.style.display = 'block';
+        if (positionNavigation) {
+            positionNavigation.style.display = 'flex';
+        }
     });
+    
+    // Position navigation buttons
+    const positionBtns = document.querySelectorAll('.position-btn');
+    if (positionBtns) {
+        positionBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                positionBtns.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show the corresponding position results
+                const position = button.id.split('-')[0]; // first, middle, or last
+                showPositionResults(position);
+            });
+        });
+    }
+    
+    console.log('Sound comparison setup complete');
 }
 
 // Compare two sounds and find similar words
@@ -30,8 +59,10 @@ function compareSounds(firstSound, secondSound) {
     showLoading(true);
     
     // Update the sound titles
-    firstSoundTitle.textContent = firstSound;
-    secondSoundTitle.textContent = secondSound;
+    if (firstSoundTitle) firstSoundTitle.textContent = `First Sound: ${firstSound}`;
+    if (secondSoundTitle) secondSoundTitle.textContent = `Second Sound: ${secondSound}`;
+    
+    console.log(`Comparing sounds: ${firstSound} and ${secondSound}`);
     
     // Find words containing the first sound
     const firstSoundWords = findWordsWithSound(firstSound);
@@ -47,30 +78,49 @@ function compareSounds(firstSound, secondSound) {
     const firstSoundCategorized = categorizeWordsByPosition(firstSoundProcessed);
     const secondSoundCategorized = categorizeWordsByPosition(secondSoundProcessed);
     
-    // Find pairs of words with sounds in similar positions for each category
-    const firstPositionPairs = findWordPairsWithinCategory(
-        firstSoundCategorized.firstPosition, 
-        secondSoundCategorized.firstPosition
-    );
+    // Store results for pagination
+    if (typeof paginatedResults !== 'undefined') {
+        paginatedResults.soundComparison = {
+            first: {
+                firstSound: firstSoundCategorized.first,
+                secondSound: secondSoundCategorized.first
+            },
+            middle: {
+                firstSound: firstSoundCategorized.middle,
+                secondSound: secondSoundCategorized.middle
+            },
+            last: {
+                firstSound: firstSoundCategorized.last,
+                secondSound: secondSoundCategorized.last
+            }
+        };
+        
+        console.log('Stored results for pagination:', {
+            first: {
+                firstSound: firstSoundCategorized.first.length,
+                secondSound: secondSoundCategorized.first.length
+            },
+            middle: {
+                firstSound: firstSoundCategorized.middle.length,
+                secondSound: secondSoundCategorized.middle.length
+            },
+            last: {
+                firstSound: firstSoundCategorized.last.length,
+                secondSound: secondSoundCategorized.last.length
+            }
+        });
+    }
     
-    const middlePositionPairs = findWordPairsWithinCategory(
-        firstSoundCategorized.middlePosition, 
-        secondSoundCategorized.middlePosition
-    );
+    // Make sure the first position button is active
+    const firstPositionBtn = document.getElementById('first-position-btn');
+    if (firstPositionBtn) {
+        const positionBtns = document.querySelectorAll('.position-btn');
+        positionBtns.forEach(btn => btn.classList.remove('active'));
+        firstPositionBtn.classList.add('active');
+    }
     
-    const lastPositionPairs = findWordPairsWithinCategory(
-        firstSoundCategorized.lastPosition, 
-        secondSoundCategorized.lastPosition
-    );
-    
-    // Display the results using the new function that shows one position at a time
-    displayCategorizedResultsOnePosition(
-        firstPositionPairs, 
-        middlePositionPairs, 
-        lastPositionPairs, 
-        firstSoundResults, 
-        secondSoundResults
-    );
+    // Display first position results by default
+    showPositionResults('first');
     
     showLoading(false);
 }
@@ -88,7 +138,9 @@ function findWordsWithSound(sound) {
         return false;
     };
     
-    return wordsData.filter(item => {
+    console.log(`Searching for words with sound: ${sound}`);
+    
+    const results = wordsData.filter(item => {
         const usPhonetic = item.value.phonetics?.us || '';
         const ukPhonetic = item.value.phonetics?.uk || '';
         
@@ -101,450 +153,189 @@ function findWordsWithSound(sound) {
             return usPhonetic.includes(sound) || ukPhonetic.includes(sound);
         }
     });
+    
+    console.log(`Found ${results.length} words with sound: ${sound}`);
+    return results;
 }
 
 // Process words to extract position information
-function processWordsForPositionMatching(words, targetSound) {
-    return words.map(word => {
-        const phonetic = word.value.phonetics?.uk || word.value.phonetics?.us || '';
+function processWordsForPositionMatching(words, sound) {
+    console.log(`Processing ${words.length} words for sound: ${sound}`);
+    
+    const processed = words.map(item => {
+        const word = item.value;
+        const usPhonetic = word.phonetics?.us || '';
+        const ukPhonetic = word.phonetics?.uk || '';
         
-        // Find positions of the target sound in the phonetic transcription
+        // Use UK phonetics if available, otherwise US
+        const phonetic = ukPhonetic || usPhonetic;
+        
+        // Find positions of the sound in the phonetic string
         const positions = [];
-        let pos = phonetic.indexOf(targetSound);
+        let pos = phonetic.indexOf(sound);
         while (pos !== -1) {
             positions.push(pos);
-            pos = phonetic.indexOf(targetSound, pos + 1);
+            pos = phonetic.indexOf(sound, pos + 1);
         }
         
-        // Create a position pattern (e.g., "0,4" for sounds at positions 0 and 4)
-        const positionPattern = positions.join(',');
-        
         return {
-            word: word,
-            phonetic: phonetic,
+            word: item,
             positions: positions,
-            positionPattern: positionPattern
+            phonetic: phonetic
         };
     });
+    
+    // Log some debug info
+    const withPositions = processed.filter(item => item.positions.length > 0);
+    console.log(`Found ${withPositions.length} words with positions for sound: ${sound}`);
+    
+    return processed;
 }
 
 // Categorize words by position (first, middle, last)
-function categorizeWordsByPosition(words) {
-    const firstPosition = [];
-    const middlePosition = [];
-    const lastPosition = [];
+function categorizeWordsByPosition(processedWords) {
+    const result = {
+        first: [],
+        middle: [],
+        last: []
+    };
     
-    words.forEach(word => {
-        if (word.positions.length === 0) return;
+    processedWords.forEach(item => {
+        const phonetic = item.phonetic;
         
-        const phoneticLength = word.phonetic.length;
-        
-        // Check if the sound appears at the beginning (first 20% of the word)
-        if (word.positions.some(pos => pos <= phoneticLength * 0.2)) {
-            firstPosition.push({...word, positionType: 'first'});
+        if (item.positions.length === 0) {
+            return; // Skip items with no positions
         }
         
-        // Check if the sound appears in the middle (between 20% and 80% of the word)
-        if (word.positions.some(pos => pos > phoneticLength * 0.2 && pos < phoneticLength * 0.8)) {
-            middlePosition.push({...word, positionType: 'middle'});
-        }
-        
-        // Check if the sound appears at the end (last 20% of the word)
-        if (word.positions.some(pos => pos >= phoneticLength * 0.8)) {
-            lastPosition.push({...word, positionType: 'last'});
-        }
+        item.positions.forEach(pos => {
+            // Check if the sound is at the beginning
+            if (pos === 0 || (pos === 1 && phonetic[0] === 'ˈ') || (pos === 1 && phonetic[0] === '/')) {
+                result.first.push(item.word);
+            }
+            // Check if the sound is at the end
+            else if (pos === phonetic.length - 1 || 
+                    (pos === phonetic.length - 2 && phonetic[phonetic.length - 1] === 'r') ||
+                    (pos === phonetic.length - 2 && phonetic[phonetic.length - 1] === '/')) {
+                result.last.push(item.word);
+            }
+            // Otherwise it's in the middle
+            else {
+                result.middle.push(item.word);
+            }
+        });
     });
     
-    return {
-        firstPosition,
-        middlePosition,
-        lastPosition
-    };
-}
-
-// Find pairs of words within the same position category
-function findWordPairsWithinCategory(firstSoundWords, secondSoundWords) {
-    // If either category is empty, return empty arrays
-    if (firstSoundWords.length === 0 || secondSoundWords.length === 0) {
-        return {
-            firstSoundWords: [],
-            secondSoundWords: []
-        };
-    }
+    // Remove duplicates
+    result.first = [...new Set(result.first)];
+    result.middle = [...new Set(result.middle)];
+    result.last = [...new Set(result.last)];
     
-    // Group words by position pattern
-    const firstSoundByPattern = groupWordsByPositionPattern(firstSoundWords);
-    const secondSoundByPattern = groupWordsByPositionPattern(secondSoundWords);
-    
-    // Match words with similar position patterns
-    const firstSoundPairs = [];
-    const secondSoundPairs = [];
-    
-    // First, find exact position matches
-    for (const pattern in firstSoundByPattern) {
-        if (secondSoundByPattern[pattern]) {
-            // We have an exact position match
-            const firstWords = firstSoundByPattern[pattern];
-            const secondWords = secondSoundByPattern[pattern];
-            
-            // Match as many words as possible with this pattern
-            const pairCount = Math.min(firstWords.length, secondWords.length);
-            
-            for (let i = 0; i < pairCount; i++) {
-                firstSoundPairs.push({
-                    ...firstWords[i],
-                    matchScore: 100 // Perfect position match
-                });
-                
-                secondSoundPairs.push({
-                    ...secondWords[i],
-                    matchScore: 100 // Perfect position match
-                });
-            }
-            
-            // Remove the matched words
-            firstSoundByPattern[pattern] = firstWords.slice(pairCount);
-            secondSoundByPattern[pattern] = secondWords.slice(pairCount);
-            
-            // If we've used all words from either group, remove the pattern
-            if (firstSoundByPattern[pattern].length === 0) {
-                delete firstSoundByPattern[pattern];
-            }
-            if (secondSoundByPattern[pattern].length === 0) {
-                delete secondSoundByPattern[pattern];
-            }
-        }
-    }
-    
-    // Then, find similar position matches for remaining words
-    const remainingFirstWords = Object.values(firstSoundByPattern).flat();
-    const remainingSecondWords = Object.values(secondSoundByPattern).flat();
-    
-    // For each remaining first sound word, find the best matching second sound word
-    for (const firstWord of remainingFirstWords) {
-        if (remainingSecondWords.length === 0) break;
-        
-        let bestMatchIndex = 0;
-        let bestMatchScore = 0;
-        
-        // Find the best matching second word
-        for (let i = 0; i < remainingSecondWords.length; i++) {
-            const secondWord = remainingSecondWords[i];
-            const matchScore = calculatePositionMatchScore(
-                firstWord.positionPattern, 
-                secondWord.positionPattern
-            );
-            
-            if (matchScore > bestMatchScore) {
-                bestMatchScore = matchScore;
-                bestMatchIndex = i;
-            }
-        }
-        
-        // Add the best match to our pairs
-        const secondWord = remainingSecondWords[bestMatchIndex];
-        
-        firstSoundPairs.push({
-            ...firstWord,
-            matchScore: bestMatchScore
-        });
-        
-        secondSoundPairs.push({
-            ...secondWord,
-            matchScore: bestMatchScore
-        });
-        
-        // Remove the matched second word
-        remainingSecondWords.splice(bestMatchIndex, 1);
-    }
-    
-    return {
-        firstSoundWords: firstSoundPairs,
-        secondSoundWords: secondSoundPairs
-    };
-}
-
-// Group words by their position pattern
-function groupWordsByPositionPattern(words) {
-    const wordsByPattern = {};
-    
-    words.forEach(word => {
-        if (!wordsByPattern[word.positionPattern]) {
-            wordsByPattern[word.positionPattern] = [];
-        }
-        wordsByPattern[word.positionPattern].push(word);
+    console.log('Categorized words by position:', {
+        first: result.first.length,
+        middle: result.middle.length,
+        last: result.last.length
     });
     
-    return wordsByPattern;
+    return result;
 }
 
-// Calculate how well two position patterns match (as a percentage)
-function calculatePositionMatchScore(pattern1, pattern2) {
-    if (!pattern1 || !pattern2) return 0;
-    
-    const positions1 = pattern1.split(',').map(Number);
-    const positions2 = pattern2.split(',').map(Number);
-    
-    // If different number of occurrences, reduce the score
-    if (positions1.length !== positions2.length) {
-        return 50 * Math.min(positions1.length, positions2.length) / Math.max(positions1.length, positions2.length);
-    }
-    
-    // Calculate average position difference
-    let totalDiff = 0;
-    for (let i = 0; i < positions1.length; i++) {
-        totalDiff += Math.abs(positions1[i] - positions2[i]);
-    }
-    
-    const avgDiff = totalDiff / positions1.length;
-    // Convert to a score where 0 difference = 100% and larger differences = lower scores
-    return Math.max(0, 100 - (avgDiff * 10));
-}
-
-// Function to display categorized results showing only one position at a time
-function displayCategorizedResultsOnePosition(firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer) {
-    // Store results for pagination
-    paginatedResults.soundComparison = {
-        first: {
-            firstSound: firstPositionPairs.firstSoundWords,
-            secondSound: firstPositionPairs.secondSoundWords
-        },
-        middle: {
-            firstSound: middlePositionPairs.firstSoundWords,
-            secondSound: middlePositionPairs.secondSoundWords
-        },
-        last: {
-            firstSound: lastPositionPairs.firstSoundWords,
-            secondSound: lastPositionPairs.secondSoundWords
-        }
-    };
-    
-    // Clear containers
-    firstSoundContainer.innerHTML = '';
-    secondSoundContainer.innerHTML = '';
-    
-    // Check if we have any results
-    const hasFirstPosition = firstPositionPairs.firstSoundWords.length > 0;
-    const hasMiddlePosition = middlePositionPairs.firstSoundWords.length > 0;
-    const hasLastPosition = lastPositionPairs.firstSoundWords.length > 0;
-    
-    if (!hasFirstPosition && !hasMiddlePosition && !hasLastPosition) {
-        firstSoundContainer.innerHTML = '<p>No results found.</p>';
-        secondSoundContainer.innerHTML = '<p>No results found.</p>';
-        
-        // Hide position navigation if no results
-        document.getElementById('position-navigation').style.display = 'none';
+// Show results for a specific position
+function showPositionResults(position) {
+    if (!firstSoundResults || !secondSoundResults) {
+        console.error('Sound comparison result containers not found');
         return;
     }
     
-    // Update position navigation buttons based on available results
-    updatePositionNavigationButtons(hasFirstPosition, hasMiddlePosition, hasLastPosition);
+    console.log(`Showing results for position: ${position}`);
     
-    // Determine which position to show first
-    let initialPosition = 'first';
-    if (!hasFirstPosition) {
-        initialPosition = hasMiddlePosition ? 'middle' : 'last';
-    }
+    // Get the results for the selected position
+    const firstSoundPositionResults = paginatedResults.soundComparison[position].firstSound;
+    const secondSoundPositionResults = paginatedResults.soundComparison[position].secondSound;
     
-    // Show only the initial position
-    showPositionResults(initialPosition, firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer);
+    console.log(`Results count: First sound: ${firstSoundPositionResults.length}, Second sound: ${secondSoundPositionResults.length}`);
     
-    // Set the initial position button as active
-    setActivePositionButton(document.getElementById(`${initialPosition}-position-btn`));
+    // Clear previous results
+    firstSoundResults.innerHTML = '';
+    secondSoundResults.innerHTML = '';
     
-    // Update the position navigation button click handlers
-    const firstPositionBtn = document.getElementById('first-position-btn');
-    const middlePositionBtn = document.getElementById('middle-position-btn');
-    const lastPositionBtn = document.getElementById('last-position-btn');
+    // Create containers for each position
+    const firstPositionContainer = document.createElement('div');
+    firstPositionContainer.id = `${position}-position-first-sound`;
+    firstPositionContainer.className = 'position-results';
+    firstSoundResults.appendChild(firstPositionContainer);
     
-    // Clear previous event listeners (if any)
-    firstPositionBtn.replaceWith(firstPositionBtn.cloneNode(true));
-    middlePositionBtn.replaceWith(middlePositionBtn.cloneNode(true));
-    lastPositionBtn.replaceWith(lastPositionBtn.cloneNode(true));
+    const secondPositionContainer = document.createElement('div');
+    secondPositionContainer.id = `${position}-position-second-sound`;
+    secondPositionContainer.className = 'position-results';
+    secondSoundResults.appendChild(secondPositionContainer);
     
-    // Get the new button references
-    const newFirstPositionBtn = document.getElementById('first-position-btn');
-    const newMiddlePositionBtn = document.getElementById('middle-position-btn');
-    const newLastPositionBtn = document.getElementById('last-position-btn');
+    // Display results
+    const positionTitle = position.charAt(0).toUpperCase() + position.slice(1);
     
-    // Add new event listeners
-    if (hasFirstPosition) {
-        newFirstPositionBtn.addEventListener('click', () => {
-            showPositionResults('first', firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer);
-            setActivePositionButton(newFirstPositionBtn);
-        });
-    }
-    
-    if (hasMiddlePosition) {
-        newMiddlePositionBtn.addEventListener('click', () => {
-            showPositionResults('middle', firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer);
-            setActivePositionButton(newMiddlePositionBtn);
-        });
-    }
-    
-    if (hasLastPosition) {
-        newLastPositionBtn.addEventListener('click', () => {
-            showPositionResults('last', firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer);
-            setActivePositionButton(newLastPositionBtn);
-        });
-    }
-}
-
-// Function to show results for a specific position
-function showPositionResults(position, firstPositionPairs, middlePositionPairs, lastPositionPairs, firstSoundContainer, secondSoundContainer) {
-    // Clear containers
-    firstSoundContainer.innerHTML = '';
-    secondSoundContainer.innerHTML = '';
-    
-    let pairs;
-    let positionTitle;
-    
-    // Select the appropriate pairs based on position
-    switch(position) {
-        case 'first':
-            pairs = firstPositionPairs;
-            positionTitle = 'First Position';
-            break;
-        case 'middle':
-            pairs = middlePositionPairs;
-            positionTitle = 'Middle Position';
-            break;
-        case 'last':
-            pairs = lastPositionPairs;
-            positionTitle = 'Last Position';
-            break;
-    }
-    
-    // Create HTML for the selected position
-    let firstSoundHtml = `<div class="position-category" id="${position}-position-first-sound"><h3>${positionTitle}</h3>`;
-    let secondSoundHtml = `<div class="position-category" id="${position}-position-second-sound"><h3>${positionTitle}</h3>`;
-    
-    // Display first page of results
-    const firstSoundFirstPage = pairs.firstSoundWords.slice(0, itemsPerPage);
-    const secondSoundFirstPage = pairs.secondSoundWords.slice(0, itemsPerPage);
-    
-    firstSoundHtml += createComparisonWordsHtml(firstSoundFirstPage);
-    secondSoundHtml += createComparisonWordsHtml(secondSoundFirstPage);
-    
-    firstSoundHtml += '</div>';
-    secondSoundHtml += '</div>';
-    
-    // Add pagination controls if needed
-    if (pairs.firstSoundWords.length > itemsPerPage) {
+    try {
+        // Add content to containers
+        firstPositionContainer.innerHTML = `<h3>${positionTitle} Position</h3>` + createComparisonWordsHtml(firstSoundPositionResults.slice(0, itemsPerPage));
+        secondPositionContainer.innerHTML = `<h3>${positionTitle} Position</h3>` + createComparisonWordsHtml(secondSoundPositionResults.slice(0, itemsPerPage));
+        
+        // Create pagination controls
         const totalPages = Math.ceil(Math.max(
-            pairs.firstSoundWords.length,
-            pairs.secondSoundWords.length
+            firstSoundPositionResults.length,
+            secondSoundPositionResults.length
         ) / itemsPerPage);
         
-        firstSoundHtml += `<div id="${position}-position-pagination-first"></div>`;
-        secondSoundHtml += `<div id="${position}-position-pagination-second"></div>`;
-    }
-    
-    // Update containers
-    firstSoundContainer.innerHTML = firstSoundHtml;
-    secondSoundContainer.innerHTML = secondSoundHtml;
-    
-    // Add pagination controls if needed
-    if (pairs.firstSoundWords.length > itemsPerPage) {
-        const totalPages = Math.ceil(Math.max(
-            pairs.firstSoundWords.length,
-            pairs.secondSoundWords.length
-        ) / itemsPerPage);
+        console.log(`Total pages for ${position} position: ${totalPages}`);
         
-        createSoundComparisonPaginationControls(
-            totalPages, 
-            document.getElementById(`${position}-position-pagination-first`),
-            document.getElementById(`${position}-position-pagination-second`),
-            position
-        );
+        // Create pagination controls after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            if (typeof createSoundComparisonPaginationControls === 'function') {
+                createSoundComparisonPaginationControls(totalPages, firstPositionContainer, secondPositionContainer, position);
+            } else {
+                console.error('createSoundComparisonPaginationControls function not found');
+            }
+        }, 100);
+        
+        console.log(`Displayed ${position} position results`);
+    } catch (error) {
+        console.error('Error displaying position results:', error);
+        firstPositionContainer.innerHTML = `<h3>${positionTitle} Position</h3><p>Error displaying results</p>`;
+        secondPositionContainer.innerHTML = `<h3>${positionTitle} Position</h3><p>Error displaying results</p>`;
     }
-}
-
-// Update position navigation buttons based on available results
-function updatePositionNavigationButtons(hasFirstPosition, hasMiddlePosition, hasLastPosition) {
-    const positionNavigation = document.getElementById('position-navigation');
-    const firstPositionBtn = document.getElementById('first-position-btn');
-    const middlePositionBtn = document.getElementById('middle-position-btn');
-    const lastPositionBtn = document.getElementById('last-position-btn');
-    
-    // Show position navigation if we have any results
-    positionNavigation.style.display = (hasFirstPosition || hasMiddlePosition || hasLastPosition) ? 'block' : 'none';
-    
-    // Enable/disable buttons based on available results
-    firstPositionBtn.disabled = !hasFirstPosition;
-    firstPositionBtn.style.opacity = hasFirstPosition ? '1' : '0.5';
-    
-    middlePositionBtn.disabled = !hasMiddlePosition;
-    middlePositionBtn.style.opacity = hasMiddlePosition ? '1' : '0.5';
-    
-    lastPositionBtn.disabled = !hasLastPosition;
-    lastPositionBtn.style.opacity = hasLastPosition ? '1' : '0.5';
-}
-
-// Set active position button
-function setActivePositionButton(activeButton) {
-    const buttons = document.querySelectorAll('.position-btn');
-    buttons.forEach(button => {
-        button.classList.remove('active');
-    });
-    activeButton.classList.add('active');
 }
 
 // Create HTML for comparison words
 function createComparisonWordsHtml(words) {
-    if (words.length === 0) {
-        return '<p>No words found.</p>';
+    if (!words || words.length === 0) {
+        return '<p class="no-results">No words found with this sound in this position.</p>';
     }
     
-    let html = '';
+    let html = '<div class="comparison-words">';
     
     words.forEach(item => {
-        const word = item.word.value;
-        const matchScore = Math.round(item.matchScore);
-        const positions = item.positions || [];
-        
-        // Create a visual representation of the sound positions
-        const phoneticText = item.phonetic;
-        let positionIndicator = '';
-        if (phoneticText) {
-            for (let i = 0; i < phoneticText.length; i++) {
-                if (positions.includes(i)) {
-                    positionIndicator += '▼';
-                } else {
-                    positionIndicator += ' ';
-                }
-            }
-        }
+        const word = item.value;
         
         html += `
             <div class="comparison-word">
-                <div class="comparison-word-header">
-                    <div class="comparison-word-title">${word.word}</div>
+                <h4>${word.word}</h4>
+                <div class="word-phonetics">
+                    ${word.phonetics?.uk ? `<div>UK: ${word.phonetics.uk}</div>` : ''}
+                    ${word.phonetics?.us ? `<div>US: ${word.phonetics.us}</div>` : ''}
                 </div>
-                <div class="phonetic-container">
-                    <div class="comparison-word-phonetic">${phoneticText}</div>
-                    <div class="position-indicator">${positionIndicator}</div>
-                </div>
-                <div class="scores">
-                    <div class="position-score">Position Match: ${matchScore}%</div>
-                </div>
-                <div class="audio-controls">
+                <div class="word-audio">
                     ${word.uk?.mp3 ? `
                         <button class="audio-btn" onclick="playAudio('${word.uk.mp3}')">
-                            Play UK 🔊
+                            UK 🔊
                         </button>
                     ` : ''}
-                    
                     ${word.us?.mp3 ? `
                         <button class="audio-btn" onclick="playAudio('${word.us.mp3}')">
-                            Play US 🔊
+                            US 🔊
                         </button>
                     ` : ''}
                 </div>
-                <a href="${word.href}" target="_blank">View on Oxford Learner's Dictionary</a>
             </div>
         `;
     });
     
+    html += '</div>';
     return html;
 }

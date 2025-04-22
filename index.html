@@ -10,17 +10,16 @@
     <link rel="stylesheet" href="css/mobile-tip.css">
     <link rel="stylesheet" href="css/save-for-later.css">
     <link rel="stylesheet" href="css/enhanced-styles.css">
-
     <link rel="stylesheet" href="css/card-styles.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/fix-layout.css">
-
-
-    <link rel="stylesheet" href="css/theme-switcher.css">
+    <link rel="stylesheet" href="css/video-player.css">
+    <link rel="stylesheet" href="css/video-tab.css">
     <link rel="stylesheet" href="css/debug.css">
-    <link rel="stylesheet" href="css/fix-loading-theme.css">
+    <link rel="stylesheet" href="css/fix-loading.css">
     <link rel="stylesheet" href="css/simplified-speech-practice.css">
     <link rel="stylesheet" href="css/fix-games-layout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,6 +42,7 @@
             <button class="tab-btn" data-tab="sound-comparison">Sound Comparison</button>
             <button class="tab-btn" data-tab="saved-words">Saved Words <span id="saved-words-count" class="saved-words-count">0</span></button>
             <button class="tab-btn" data-tab="games">Games</button>
+            <button class="tab-btn" data-tab="videos">Videos</button>
         </div>
         
         <div class="content">
@@ -354,6 +354,21 @@
                 </div>
                 
                 <div class="search-controls">
+                    <div class="search-mode">
+                        <span>Search Mode:</span>
+                        <label>
+                            <input type="radio" name="search-mode" value="AND" checked>
+                            <span>AND (all sounds)</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="search-mode" value="OR">
+                            <span>OR (any sound)</span>
+                        </label>
+                    </div>
+                    <div class="selected-sounds-display">
+                        <span>Selected Sounds:</span>
+                        <span id="selected-sounds">None</span>
+                    </div>
                     <button id="multi-phonetic-search-btn" class="primary-btn">Search Selected Sounds</button>
                     <button id="clear-selection-btn" class="secondary-btn">Clear Selection</button>
                 </div>
@@ -508,13 +523,43 @@
                     <div id="game-area"></div>
                 </div>
             </div>
+            
+            <div id="videos" class="search-panel">
+                <div class="video-container">
+                    <h2>English Listening Practice</h2>
+                    <p>Improve your English listening skills with these video lessons:</p>
+                    
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="series-filter">Series:</label>
+                            <select id="series-filter">
+                                <option value="all">All Series</option>
+                                <!-- Series will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="search-filter">Search:</label>
+                            <input type="text" id="search-filter" placeholder="Search videos...">
+                        </div>
+                    </div>
+                    
+                    <!-- Grid View -->
+                    <div id="video-grid" class="video-grid">
+                        <!-- Videos will be loaded here dynamically -->
+                    </div>
+                    
+                    <div id="no-results" class="no-results" style="display: none;">
+                        <p>No videos match your search criteria. Please try different filters.</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div id="results"></div>
         
         <div id="loading" class="loading hidden">
             <div class="spinner"></div>
-            <p>Loading...</p>
         </div>
     </main>
     
@@ -536,7 +581,6 @@
     <script src="js/features/speech-recognition.js"></script>
     <script src="js/features/mobile-optimization.js"></script>
     <script src="js/features/save-for-later.js"></script>
-    <script src="js/features/theme-switcher.js"></script>
     
     <!-- Game Scripts -->
     <script src="js/games/sound-matching-game.js"></script>
@@ -545,5 +589,10 @@
     <script src="js/games/phonetic-hangman.js"></script>
     <script src="js/games/sound-sorting.js"></script>
     <script src="js/games/games-manager.js"></script>
+    
+    <!-- Video Scripts -->
+    <script src="listening-practice-resources/listening.js"></script>
+    <script src="js/features/video-tab.js"></script>
+    <script src="js/features/video-player.js"></script>
 </body>
 </html>

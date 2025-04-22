@@ -1,0 +1,40 @@
+[
+    {
+        "urls": [
+            "https://www.youtube.com/watch?v=wJvJBcS3RmY",
+            "https://www.youtube.com/watch?v=FWI9GEwJNzc"
+        ],
+        "level": "Beginner",
+        "category": "Listening",
+        "series": "Mr. Duncan's English",
+        "group": "General English",
+        "sortBy": "title",
+        "overrides": {
+            "FWI9GEwJNzc": {
+                "level": "Elementary",
+                "group": "Basic English",
+                "subtitle": "Hello, my name is Duncan.\nI am an English teacher.\nI will help you to learn English.\nI will teach you new words.\nI will help you to speak English.\nI will help you to understand English.\nI will help you to read English.\nI will help you to write English.\nI will help you to listen to English.\nI will help you to improve your English.\nI will help you to enjoy learning English.\nI will help you to feel confident when using English.\nI will help you to communicate in English.\nI will help you to express yourself in English.\nI will help you to think in English.\nI will help you to dream in English.\nI will help you to live in English.\nI will help you to love English.\nI will help you to learn English."
+            }
+        }
+    },
+    {
+        "urls": [
+            "https://www.youtube.com/watch?v=WDrCAf_4Qao"
+        ],
+        "level": "Intermediate",
+        "category": "Listening",
+        "series": "BBC Learning English",
+        "group": "Pronunciation",
+        "sortBy": "title"
+    },
+    {
+        "urls": [
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        ],
+        "level": "Advanced",
+        "category": "Listening",
+        "series": "Music English",
+        "group": "Music",
+        "sortBy": "title"
+    }
+]

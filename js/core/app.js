@@ -3,6 +3,7 @@ let wordsData = [];
 
 // Initialize the application
 async function initApp() {
+    showLoading(true);
     try {
         // Load words data
         await loadWordsData();
@@ -28,20 +29,28 @@ async function initApp() {
     } catch (error) {
         console.error('Error initializing app:', error);
         showError('Failed to initialize the application. Please refresh the page.');
+    } finally {
+        showLoading(false);
     }
 }
 
 // Load words data from online repository
 async function loadWordsData() {
-    showLoading(true);
     try {
         // Load from GitHub repository
         const response = await fetch('https://raw.githubusercontent.com/tyypgzl/Oxford-5000-words/main/full-word.json');
         if (!response.ok) {
             throw new Error('Failed to load words data from GitHub');
         }
-        wordsData = await response.json();
-        console.log(`Loaded ${wordsData.length} words from GitHub`);
+        const data = await response.json();
+        
+        // Check if the data is in the expected format
+        if (Array.isArray(data) && data.length > 0 && data[0].value && data[0].value.word) {
+            wordsData = data;
+            console.log(`Loaded ${wordsData.length} words from GitHub`);
+        } else {
+            throw new Error('Data format is not as expected');
+        }
     } catch (error) {
         console.error('Error loading words data from GitHub:', error);
         showError('Failed to load dictionary data. Please try again later.');
@@ -85,8 +94,6 @@ async function loadWordsData() {
                 }
             }
         ];
-    } finally {
-        showLoading(false);
     }
 }
 
@@ -101,16 +108,24 @@ function setupEventListeners() {
     });
 
     // Word search
-    setupWordSearch();
+    if (typeof setupWordSearch === 'function') {
+        setupWordSearch();
+    }
     
     // Phonetic search
-    setupPhoneticSearch();
+    if (typeof setupPhoneticSearch === 'function') {
+        setupPhoneticSearch();
+    }
     
     // Multi-phonetic search
-    setupMultiPhoneticSearch();
+    if (typeof setupMultiPhoneticSearch === 'function') {
+        setupMultiPhoneticSearch();
+    }
     
     // Sound comparison
-    setupSoundComparison();
+    if (typeof setupSoundComparison === 'function') {
+        setupSoundComparison();
+    }
 }
 
 // Switch between tabs
@@ -128,18 +143,39 @@ function switchTab(tabId) {
     searchPanels.forEach(panel => {
         if (panel.id === tabId) {
             panel.classList.add('active');
+            
+            // Initialize video tab if it's the videos tab
+            if (tabId === 'videos' && typeof initVideoTab === 'function') {
+                initVideoTab();
+            }
         } else {
             panel.classList.remove('active');
         }
     });
+    
+    // Clear results when switching tabs
+    if (resultsContainer) {
+        resultsContainer.innerHTML = '';
+        console.log('Cleared results when switching to tab:', tabId);
+    }
+    
+    // Reset pagination
+    if (typeof resetPaginationData === 'function') {
+        resetPaginationData();
+    }
 }
 
 // Show/hide loading indicator
 function showLoading(isLoading) {
+    const loadingIndicator = document.getElementById('loading');
+    if (!loadingIndicator) return;
+    
     if (isLoading) {
         loadingIndicator.classList.remove('hidden');
+        console.log('Loading indicator shown');
     } else {
         loadingIndicator.classList.add('hidden');
+        console.log('Loading indicator hidden');
     }
 }
 
@@ -161,4 +197,14 @@ function playAudio(url) {
 window.playAudio = playAudio;
 
 // Initialize the app when the DOM is loaded
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if results container exists, if not create it
+    if (!document.getElementById('results')) {
+        const resultsDiv = document.createElement('div');
+        resultsDiv.id = 'results';
+        document.querySelector('.content').appendChild(resultsDiv);
+    }
+    
+    // Initialize the app
+    initApp();
+});

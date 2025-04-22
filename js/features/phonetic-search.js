@@ -2,6 +2,11 @@
 
 // Set up phonetic search event listeners
 function setupPhoneticSearch() {
+    if (!phoneticSearchBtn || !phoneticInput) {
+        console.error('Phonetic search elements not found');
+        return;
+    }
+    
     phoneticSearchBtn.addEventListener('click', () => {
         const searchTerm = phoneticInput.value.trim();
         if (searchTerm) {
@@ -19,13 +24,16 @@ function setupPhoneticSearch() {
     });
 
     // Phonetic buttons
-    phoneticButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const sound = button.getAttribute('data-sound');
-            phoneticInput.value = sound;
-            searchByPhonetic(sound);
+    const phoneticBtns = document.querySelectorAll('.phonetic-btn');
+    if (phoneticBtns) {
+        phoneticBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                const sound = button.getAttribute('data-sound');
+                phoneticInput.value = sound;
+                searchByPhonetic(sound);
+            });
         });
-    });
+    }
 }
 
 // Search by phonetic sound
