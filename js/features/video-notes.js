@@ -125,7 +125,7 @@ function startNoteTaking(notesTextarea) {
             noteTakingSection.classList.add('active-note-taking');
         }
         
-        // Show notification
+        // Show notification without animation
         showNotification('Note taking mode activated. Press ESC when done.');
     }, 100);
 }
