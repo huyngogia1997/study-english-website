@@ -3,55 +3,22 @@
         "urls": [
             "https://www.youtube.com/watch?v=FWI9GEwJNzc",
             "https://www.youtube.com/watch?v=wJvJBcS3RmY",
-            "https://www.youtube.com/watch?v=WDrCAf_4Qao"
+            "https://www.youtube.com/watch?v=WDrCAf_4Qao",
+            "https://www.youtube.com/watch?v=a8hSmlylt5c",
+            "https://www.youtube.com/watch?v=9bpRNQgjf4I",
+            "https://www.youtube.com/watch?v=m4faeJbHOrM",
+            "https://www.youtube.com/watch?v=8H_0NVn3n1E",
+            "https://www.youtube.com/watch?v=xEc9nczb0ns",
+            "https://www.youtube.com/watch?v=ezz8cnpYd_s",
+            "https://www.youtube.com/watch?v=eZbKEgidUMY",
+            "https://www.youtube.com/watch?v=FMgqY2FMur8",
+            "https://www.youtube.com/watch?v=1wE-TpuQWWc",
+            "https://www.youtube.com/watch?v=J34F9XJpZqM",
+            "https://www.youtube.com/watch?v=x3sCYvEDDu8"
         ],
         "level": "Beginner",
         "category": "Listening",
         "series": "Mr. Duncan's English",
-        "sortBy": "title"
-    },
-    {
-        "urls": [
-            "https://www.youtube.com/watch?v=WDrCAf_4Qao",
-            "https://www.youtube.com/watch?v=UlHObRqoUGQ",
-            "https://www.youtube.com/watch?v=rlo1RABNmuM"
-        ],
-        "level": "Beginner",
-        "category": "Listening",
-        "series": "BBC Learning English",
-        "sortBy": "title"
-    },
-    {
-        "urls": [
-            "https://www.youtube.com/watch?v=2pN2svGZTqA",
-            "https://www.youtube.com/watch?v=DGAcT9W5Jz0",
-            "https://www.youtube.com/watch?v=moNS37DffoQ"
-        ],
-        "level": "Beginner",
-        "category": "Listening",
-        "series": "EnglishClass101",
-        "sortBy": "title"
-    },
-    {
-        "urls": [
-            "https://www.youtube.com/watch?v=m7MHAU6b2RY",
-            "https://www.youtube.com/watch?v=2dA4Ju0uV5s",
-            "https://www.youtube.com/watch?v=Ze9BZg2tQjk"
-        ],
-        "level": "Beginner",
-        "category": "Listening",
-        "series": "English Outside the Box",
-        "sortBy": "title"
-    },
-    {
-        "urls": [
-            "https://www.youtube.com/watch?v=kOKANbi0zms",
-            "https://www.youtube.com/watch?v=8gAgQBK6MbY",
-            "https://www.youtube.com/watch?v=kepgvK1ljCY"
-        ],
-        "level": "Beginner",
-        "category": "Listening",
-        "series": "Everyday English Conversation",
         "sortBy": "title"
     }
 ]
