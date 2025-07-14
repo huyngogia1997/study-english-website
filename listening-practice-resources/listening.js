@@ -167,6 +167,28 @@ const listeningVideos = [
                     "youtubeId": "Y681hXWwhQY",
                     "series": "BBC",
                     "subtitle": ""
+                },
+                {
+                    "id": "Qo4WoTCBgOs",
+                    "title": "How to Talk About Appearance - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "Qo4WoTCBgOs",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "hOZu0GhID8U",
+                    "title": "How to Talk About Pets - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "hOZu0GhID8U",
+                    "series": "Caribou English",
+                    "subtitle": ""
                 }
             ]
         }];
