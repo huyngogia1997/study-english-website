@@ -189,6 +189,72 @@ const listeningVideos = [
                     "youtubeId": "hOZu0GhID8U",
                     "series": "Caribou English",
                     "subtitle": ""
+                },   
+                {
+                    "id": "7fuDeHZXDVc",
+                    "title": "How to Talk About Teachers and Personality - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "7fuDeHZXDVc",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "3MUWJ7JbNtw",
+                    "title": "How to Talk About Travel and Transportation - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "3MUWJ7JbNtw",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "xroKdXLUoZY",
+                    "title": "How to Talk About Job Applications - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "xroKdXLUoZY",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "iDZeAJWl4ak",
+                    "title": "How to Talk About Books - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "iDZeAJWl4ak",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "LqiC0FDfEm0",
+                    "title": "How to Talk About Weather - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "LqiC0FDfEm0",
+                    "series": "Caribou English",
+                    "subtitle": ""
+                },
+                {
+                    "id": "aO1-6X_f74M",
+                    "title": "How to Talk About Hometown - 2 Minute English Mini Podcast",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "2:00",
+                    "youtubeId": "aO1-6X_f74M",
+                    "series": "Caribou English",
+                    "subtitle": ""
                 }
             ]
         }];
