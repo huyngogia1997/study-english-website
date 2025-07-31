@@ -255,6 +255,41 @@ const listeningVideos = [
                     "youtubeId": "aO1-6X_f74M",
                     "series": "Caribou English",
                     "subtitle": ""
+                },
+                {
+                    "id": "AKzG_ZS-Ydg",
+                    "title": "Present Progressive – Grammar & Verb Tenses",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "5:00",
+                    "youtubeId": "AKzG_ZS-Ydg",
+                    "series": "Ellii",
+                    "subtitle": ""
+                },
+                {
+                    "id": "nvVdIJ0las0",
+                    "title": "Simple Present – Grammar & Verb Tenses",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "5:00",
+                    "youtubeId": "nvVdIJ0las0",
+                    "series": "Ellii",
+                    "subtitle": ""
+                },
+                {
+                    "id": "_facQiZDrU4",
+                    "title": "Present Modals of Ability – English Grammar Lessons",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "5:00",
+                    "youtubeId": "_facQiZDrU4",
+                    "series": "Ellii",
+                    "subtitle": ""
                 }
+                    
+                    
             ]
         }];
