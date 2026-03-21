@@ -1,6 +1,21 @@
 // Listening practice videos
 const listeningVideos = [
         {
+                "series": "Interview",
+                "videos": [{
+                    "id": "pFD8u5jM-gg",
+                    "title": "Real Job Interview in English | Daily English Podcast for Learners!",
+                    "description": "",
+                    "level": "Beginner",
+                    "category": "Listening",
+                    "duration": "10:00",
+                    "youtubeId": "pFD8u5jM-gg",
+                    "series": "Interview",
+                    "subtitle": ""
+                }]
+        },
+        
+        {
             "series": "Mr. Duncan's English",
             "videos": [
                 {
